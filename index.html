@@ -142,7 +142,7 @@ const VIAJE = {
   // Dejar en "" mientras no estén confirmados: el sitio muestra las dos
   // opciones y marca el pendiente como abierto hasta que se completen.
   decisiones: {
-    aeropuertoLlegada: "",        // "Haneda" o "Narita"
+    aeropuertoLlegada: "Haneda",  // "Haneda" o "Narita"
     aeropuertoSalida:  "Haneda"   // "Haneda" o "Narita"
   },
 
@@ -161,7 +161,7 @@ const VIAJE = {
   dias: [
     { fecha:"2026-10-08", plan:"Vuelo Santiago → Japón", duerme:"Avión", como:"Vuelo internacional" },
     { fecha:"2026-10-09", plan:"En tránsito", duerme:"Avión", como:"Vuelo y conexión" },
-    { fecha:"2026-10-10", plan:"Llegada a Tokio, paseo suave", duerme:"Tokio", como:"Aeropuerto → hotel: 45–90 min según Haneda o Narita" },
+    { fecha:"2026-10-10", plan:"Llegada a Tokio, paseo suave", duerme:"Tokio", como:"Haneda → hotel en Asakusa: 45–60 min" },
     { fecha:"2026-10-11", plan:"Tokio: Asakusa, Ginza, Marunouchi", duerme:"Tokio", como:"Metro y tren urbano" },
     { fecha:"2026-10-12", plan:"Diseño y arquitectura: Omotesando, Aoyama, Nezu Museum", duerme:"Tokio", como:"Metro, tren urbano, taxi corto" },
     { fecha:"2026-10-13", plan:"Arte y barrios: Roppongi, teamLab, Daikanyama y Nakameguro", duerme:"Tokio", como:"Metro, tren urbano, taxi corto" },
@@ -194,7 +194,12 @@ const VIAJE = {
         "Haneda":"Keikyu hasta Shinagawa, que conecta con Ginza, Shibuya y varias líneas JR. Alternativa: monorriel hasta Hamamatsucho. Entre 25 y 45 min, más el traslado final al hotel.",
         "Narita":"Narita Express hasta Tokyo Station, Shinagawa, Shibuya o Shinjuku, con asiento reservado. Alternativa: Skyliner hasta Nippori o Ueno. Entre 55 y 90 min según destino."
       },
-      reserva:"Sin reserva", prioridad:"", enlace:"https://www.narita-airport.jp/en/access/train/", enlaceTexto:"Accesos oficiales desde Narita", doc:"" },
+      // "enlaces" es opcional: un enlace por alternativa, se muestra el de la opción elegida.
+      enlaces:{
+        "Haneda":{ url:"https://tokyo-haneda.com/en/access/index.html", texto:"Accesos oficiales desde Haneda" },
+        "Narita":{ url:"https://www.narita-airport.jp/en/access/train/", texto:"Accesos oficiales desde Narita" }
+      },
+      reserva:"Sin reserva", prioridad:"", enlace:"", enlaceTexto:"", doc:"" },
     { fecha:"2026-10-14", tramo:"Tokio → Fukuyama → Onomichi", detalle:"Nozomi directo Tokyo Station → Fukuyama, 3 h 35 – 3 h 50, asiento reservado. Salir entre 08:00 y 09:00. Luego JR Sanyō Line a Onomichi, 20 min, sin reserva. No bajarse en Shin-Onomichi.",
       reserva:"Comprar en SmartEX", prioridad:"Venta abierta desde el 14 de septiembre", enlace:"https://smart-ex.jp/en/index.php", enlaceTexto:"SmartEX · TOKYO → FUKUYAMA, 14 oct", doc:"" },
     { fecha:"2026-10-15", tramo:"Onomichi → Setoda en bicicleta", detalle:"Retiro en Onomichi, devolución en Setoda Port. Confirmar que la categoría de bicicleta admite devolución en otro terminal. Seguir la línea azul del Shimanami Kaido.",
@@ -318,7 +323,7 @@ const VIAJE = {
       h += `<h2 class="titulo">Hoy</h2><p class="sub">Día ${dias(INICIO,HOY)+1} de ${VIAJE.dias.length}</p>`;
       if (hoy) h += tarjetaDia(hoy, true);
       const sig = VIAJE.dias.find(x => x.fecha > HOY);
-      if (sig) h += `<h2 class="titulo" style="margin-top:26px">Mañana</h2><div class="sub"></div>` + tarjetaDia(sig, false);
+      if (sig) h += `<h2 class="titulo" style="margin-top:26px;margin-bottom:10px">Mañana</h2>` + tarjetaDia(sig, false);
       const tr = VIAJE.transporte.filter(t => t.fecha >= HOY).slice(0,1);
       if (tr.length) h += `<h2 class="titulo" style="margin-top:26px">Próximo tramo</h2><p class="sub">${esc(corto(tr[0].fecha))}</p>` + tarjetaTramo(tr[0]);
     } else if (faltan > 0) {
@@ -417,14 +422,31 @@ const VIAJE = {
         `<p class="meta" style="margin-top:4px"><strong>${esc(k)}:</strong> ${esc(x.opciones[k])}</p>`).join("");
   }
 
+  // Un tramo está comprado si tiene el pasaje en "doc" o si "reserva" dice "Comprado".
+  const comprado = x => !!x.doc || /^comprad/i.test(x.reserva);
+
+  // Enlaces del tramo: el fijo, o el de la opción elegida. Sin decidir, todos.
+  function enlacesTramo(x){
+    const lista = x.enlace ? [{ url:x.enlace, texto:x.enlaceTexto || x.enlace }] : [];
+    if (x.enlaces) {
+      const elegida = (VIAJE.decisiones || {})[x.segun];
+      if (elegida && x.enlaces[elegida]) lista.push(x.enlaces[elegida]);
+      else if (!elegida) lista.push(...Object.values(x.enlaces));
+    }
+    return lista.map(e =>
+      `<p class="meta" style="margin-top:7px"><a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(e.texto)}</a></p>`).join("");
+  }
+
   function tarjetaTramo(x){
+    const listo = comprado(x);
+    const etiqueta = listo ? (/^comprad/i.test(x.reserva) ? x.reserva : "Comprado") : x.reserva;
     return `<div class="card">
       <div class="fila"><h3>${esc(x.tramo)}</h3><span class="precio">${esc(corto(x.fecha))}</span></div>
       <p class="meta" style="margin-top:6px">${esc(x.detalle)}</p>
       ${variantes(x)}
-      <span class="tag ${/SmartEX|Reservar/.test(x.reserva) ? "alerta" : "ok"}">${esc(x.reserva)}</span>
-      ${x.prioridad ? `<p class="meta" style="margin-top:7px">${esc(x.prioridad)}</p>` : ""}
-      ${x.enlace ? `<p class="meta" style="margin-top:7px"><a href="${esc(x.enlace)}" target="_blank" rel="noopener">${esc(x.enlaceTexto)}</a></p>` : ""}
+      <span class="tag ${!listo && /SmartEX|Reservar/.test(x.reserva) ? "alerta" : "ok"}">${esc(etiqueta)}</span>
+      ${x.prioridad && !listo ? `<p class="meta" style="margin-top:7px">${esc(x.prioridad)}</p>` : ""}
+      ${enlacesTramo(x)}
       ${x.doc ? `<p class="meta" style="margin-top:4px"><a href="${esc(x.doc)}" target="_blank" rel="noopener">Ver pasaje</a></p>` : ""}
     </div>`;
   }

@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Japón · Octubre 2026</title>
+<style>
+  :root{
+    color-scheme: light;
+    --ink:#15253C;
+    --ink-2:#4B5A70;
+    --paper:#E9E6DC;
+    --card:#FBF9F4;
+    --line:#CFC9B9;
+    --shu:#B23A20;
+    --sea:#2F6E79;
+    --ok:#3C6B45;
+    --radius:3px;
+    --max:760px;
+    box-sizing:border-box;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  *,*::before,*::after{box-sizing:inherit}
+  html{-webkit-text-size-adjust:100%; scroll-padding-top:calc(54px + env(safe-area-inset-top,0px))}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    font-size:16px;
+    line-height:1.5;
+    font-variant-numeric:tabular-nums;
+  }
+  h1,h2,h3{font-family:Georgia,"Hiragino Mincho ProN","Yu Mincho",serif;font-weight:400;margin:0}
+  a{color:var(--sea)}
+
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 18px}
+
+  /* ---------- Portada: la ruta ---------- */
+  header{background:var(--ink);color:#F1EEE6;padding:26px 0 0}
+  header h1{font-size:30px;letter-spacing:.06em;color:#fff}
+  header .fechas{font-size:14px;color:#A9B6C9;margin-top:4px}
+  .ruta{display:flex;gap:0;overflow-x:auto;margin-top:22px;padding:0 18px 20px;
+        max-width:var(--max);margin-left:auto;margin-right:auto;
+        scrollbar-width:none}
+  .ruta::-webkit-scrollbar{display:none}
+  .parada{flex:0 0 auto;min-width:78px;position:relative;padding-top:20px;text-align:center}
+  .parada::before{content:"";position:absolute;top:5px;left:0;right:0;height:1px;background:#4E607A}
+  .parada:first-child::before{left:50%}
+  .parada:last-child::before{right:50%}
+  .parada .punto{position:absolute;top:1px;left:50%;transform:translateX(-50%);
+                 width:9px;height:9px;border-radius:50%;background:#A9B6C9}
+  .parada.base .punto{background:#fff;width:11px;height:11px;top:0}
+  .parada .nom{display:block;font-size:12.5px;color:#DCE3EC;line-height:1.25}
+  .parada .noches{display:block;font-size:11px;color:#8B9BB2;margin-top:2px}
+
+  /* ---------- Navegación ---------- */
+  nav{position:sticky;top:0;z-index:20;background:var(--paper);
+      border-bottom:1px solid var(--line);
+      padding-top:env(safe-area-inset-top,0px)}
+  .tabs{display:flex;gap:2px;overflow-x:auto;max-width:var(--max);margin:0 auto;
+        padding:0 12px;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tabs button{flex:0 0 auto;background:none;border:0;border-bottom:2px solid transparent;
+    font:inherit;font-size:14px;color:var(--ink-2);padding:14px 10px;cursor:pointer}
+  .tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--shu)}
+  .tabs button:focus-visible{outline:2px solid var(--sea);outline-offset:-2px}
+
+  main{padding:22px 0 70px}
+  section[hidden]{display:none}
+  h2.titulo{font-size:22px;margin-bottom:4px}
+  .sub{font-size:13.5px;color:var(--ink-2);margin-bottom:18px}
+
+  /* ---------- Avisos ---------- */
+  .aviso{background:var(--card);border-left:3px solid var(--shu);
+    padding:13px 15px;margin-bottom:14px;border-radius:0 var(--radius) var(--radius) 0}
+  .aviso.info{border-left-color:var(--sea)}
+  .aviso h3{font-size:15px;margin-bottom:3px}
+  .aviso p{margin:0;font-size:14px;color:var(--ink-2)}
+
+  /* ---------- Tarjetas ---------- */
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:14px 16px;margin-bottom:10px}
+  .fila{display:flex;gap:14px;align-items:baseline;justify-content:space-between}
+  .card h3{font-size:16.5px;line-height:1.3}
+  .meta{font-size:13px;color:var(--ink-2);margin-top:3px}
+  .precio{font-size:13px;color:var(--ink-2);white-space:nowrap}
+  .tag{display:inline-block;font-size:11.5px;padding:2px 7px;border-radius:2px;
+    border:1px solid currentColor;margin-top:8px}
+  .tag.ok{color:var(--ok)}
+  .tag.alerta{color:var(--shu)}
+  .card.choque{border-color:var(--shu);border-left-width:3px}
+
+  /* ---------- Itinerario ---------- */
+  .dia{display:grid;grid-template-columns:52px 1fr;gap:14px;
+    padding:15px 0;border-bottom:1px solid var(--line)}
+  .dia:last-child{border-bottom:0}
+  .dia .fecha{text-align:center;line-height:1.15;padding-top:2px}
+  .dia .num{display:block;font-family:Georgia,serif;font-size:23px}
+  .dia .dow{display:block;font-size:11px;color:var(--ink-2)}
+  .dia .plan{font-size:15.5px}
+  .dia .donde{font-size:13px;color:var(--sea);margin-top:3px}
+  .dia .como{font-size:13px;color:var(--ink-2);margin-top:5px}
+  .dia.hoy{background:var(--card);margin:0 -14px;padding-left:14px;padding-right:14px;
+    border-left:3px solid var(--shu)}
+
+  /* ---------- Listas de acciones ---------- */
+  .check{display:flex;gap:11px;align-items:flex-start;padding:11px 0;
+    border-bottom:1px solid var(--line);font-size:14.5px}
+  .check:last-child{border-bottom:0}
+  .check input{margin-top:3px;width:17px;height:17px;accent-color:var(--sea);flex:0 0 auto}
+  .check .cuando{display:block;font-size:12.5px;color:var(--ink-2);margin-top:2px}
+  .check.listo label{text-decoration:line-through;color:var(--ink-2)}
+
+  .links a{display:block;padding:9px 0;font-size:14.5px;border-bottom:1px solid var(--line)}
+  .links a:last-child{border-bottom:0}
+
+  .vacio{background:var(--card);border:1px dashed var(--line);border-radius:var(--radius);
+    padding:26px 18px;text-align:center;color:var(--ink-2);font-size:14.5px}
+
+  footer{max-width:var(--max);margin:0 auto;padding:22px 18px 40px;
+    font-size:12.5px;color:var(--ink-2);border-top:1px solid var(--line)}
+  @media (prefers-reduced-motion:no-preference){.dia.hoy{transition:none}}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     TODO EL CONTENIDO DEL VIAJE VIVE EN ESTE BLOQUE.
+     Para editar el sitio, cambia solo lo que está aquí abajo.
+     ============================================================ -->
+<script>
+const VIAJE = {
+
+  titulo: "Japón",
+  fechas: "8 – 22 de octubre de 2026",
+
+  // DECISIONES DEL VIAJE
+  // Datos que cambian las instrucciones de otras secciones.
+  // Dejar en "" mientras no estén confirmados: el sitio muestra las dos
+  // opciones y marca el pendiente como abierto hasta que se completen.
+  decisiones: {
+    aeropuertoLlegada: "",        // "Haneda" o "Narita"
+    aeropuertoSalida:  "Haneda"   // "Haneda" o "Narita"
+  },
+
+  // Paradas de la ruta, en orden. "noches" se muestra bajo cada nombre.
+  ruta: [
+    { lugar:"Santiago",  noches:0, base:true },
+    { lugar:"Tokio",     noches:4 },
+    { lugar:"Onomichi",  noches:1 },
+    { lugar:"Setoda",    noches:1 },
+    { lugar:"Naoshima",  noches:1 },
+    { lugar:"Kyoto",     noches:3 },
+    { lugar:"Osaka",     noches:2 },
+    { lugar:"Santiago",  noches:0, base:true }
+  ],
+
+  dias: [
+    { fecha:"2026-10-08", plan:"Vuelo Santiago → Japón", duerme:"Avión", como:"Vuelo internacional" },
+    { fecha:"2026-10-09", plan:"En tránsito", duerme:"Avión", como:"Vuelo y conexión" },
+    { fecha:"2026-10-10", plan:"Llegada a Tokio, paseo suave", duerme:"Tokio", como:"Aeropuerto → hotel: 45–90 min según Haneda o Narita" },
+    { fecha:"2026-10-11", plan:"Tokio: Asakusa, Ginza, Marunouchi", duerme:"Tokio", como:"Metro y tren urbano" },
+    { fecha:"2026-10-12", plan:"Diseño y arquitectura: Omotesando, Aoyama, Nezu Museum", duerme:"Tokio", como:"Metro, tren urbano, taxi corto" },
+    { fecha:"2026-10-13", plan:"Arte y barrios: Roppongi, teamLab, Daikanyama y Nakameguro", duerme:"Tokio", como:"Metro, tren urbano, taxi corto" },
+    { fecha:"2026-10-14", plan:"Tokio → Onomichi, tarde en Onomichi", duerme:"Onomichi", como:"Shinkansen a Fukuyama + tren local: 3 h 35 – 4 h 15" },
+    { fecha:"2026-10-15", plan:"Shimanami Kaido en bicicleta: Onomichi → Setoda", duerme:"Setoda", como:"30–35 km. Pedaleo 3–4 h, con paradas 5–6 h" },
+    { fecha:"2026-10-16", plan:"Setoda → Naoshima, tarde en la isla", duerme:"Naoshima", como:"Barco a Mihara, trenes a Uno, ferry a Miyanoura: 4 – 5,5 h" },
+    { fecha:"2026-10-17", plan:"Naoshima: museos y arquitectura. Salida a Kyoto", duerme:"Kyoto", como:"Ferry + JR Uno Line + Shinkansen desde Okayama: 3 – 4 h" },
+    { fecha:"2026-10-18", plan:"Kyoto clásico: Gion, Higashiyama, Kiyomizu-dera", duerme:"Kyoto", como:"Tren local, taxi, caminata" },
+    { fecha:"2026-10-19", plan:"Jardines y templos: Arashiyama o Philosopher's Path", duerme:"Kyoto", como:"Tren local, taxi, caminata" },
+    { fecha:"2026-10-20", plan:"Kyoto → Osaka, tarde y noche en Osaka", duerme:"Osaka", como:"JR Special Rapid: 30–45 min" },
+    { fecha:"2026-10-21", plan:"Osaka: Namba, Dotonbori, Umeda, cena", duerme:"Osaka", como:"Metro, caminata, taxi corto" },
+    { fecha:"2026-10-22", plan:"Osaka → Tokio y aeropuerto. Vuelo 22:00", duerme:"Avión", como:"Shinkansen 2 h 30 – 2 h 45 + traslado al aeropuerto 35–75 min" }
+  ],
+
+  hoteles: [
+    { nombre:"Asakusa View Hotel", ciudad:"Tokio", entra:"2026-10-10", sale:"2026-10-14", precio:"US$1.986,13", estado:"Confirmada", doc:"" },
+    { nombre:"Hotel Beacon Onomichi", ciudad:"Onomichi", entra:"2026-10-14", sale:"2026-10-15", precio:"US$221,80", estado:"Confirmada", doc:"" },
+    { nombre:"SOIL Setoda", ciudad:"Setoda", entra:"2026-10-15", sale:"2026-10-16", precio:"US$284,49", estado:"Confirmada", doc:"" },
+    { nombre:"Sanamane", ciudad:"Naoshima", entra:"2026-10-16", sale:"2026-10-17", precio:"US$405,84", estado:"Confirmada", doc:"" },
+    { nombre:"soyo-ne kyoto sanjo", ciudad:"Kyoto", entra:"2026-10-17", sale:"2026-10-20", precio:"US$1.355,12", estado:"Confirmada", doc:"" },
+    { nombre:"Hotel The Celestine Kyoto Gion", ciudad:"Kyoto", entra:"2026-10-17", sale:"2026-10-20", precio:"US$1.721,97", estado:"Confirmada", doc:"" },
+    { nombre:"Centara Grand Hotel Osaka", ciudad:"Osaka", entra:"2026-10-20", sale:"2026-10-22", precio:"US$672,80", estado:"Confirmada", doc:"" },
+    { nombre:"The Osaka Station Hotel, Autograph Collection", ciudad:"Osaka", entra:"2026-10-20", sale:"2026-10-22", precio:"US$1.024,86", estado:"Confirmada", doc:"" }
+  ],
+
+  transporte: [
+    { fecha:"2026-10-10", tramo:"Aeropuerto → Tokio", detalle:"Pagar con Suica o PASMO. Agregar Suica al Wallet del iPhone antes de viajar, una tarjeta por persona.",
+      segun:"aeropuertoLlegada",
+      opciones:{
+        "Haneda":"Keikyu hasta Shinagawa, que conecta con Ginza, Shibuya y varias líneas JR. Alternativa: monorriel hasta Hamamatsucho. Entre 25 y 45 min, más el traslado final al hotel.",
+        "Narita":"Narita Express hasta Tokyo Station, Shinagawa, Shibuya o Shinjuku, con asiento reservado. Alternativa: Skyliner hasta Nippori o Ueno. Entre 55 y 90 min según destino."
+      },
+      reserva:"Sin reserva", prioridad:"", enlace:"https://www.narita-airport.jp/en/access/train/", enlaceTexto:"Accesos oficiales desde Narita", doc:"" },
+    { fecha:"2026-10-14", tramo:"Tokio → Fukuyama → Onomichi", detalle:"Nozomi directo Tokyo Station → Fukuyama, 3 h 35 – 3 h 50, asiento reservado. Salir entre 08:00 y 09:00. Luego JR Sanyō Line a Onomichi, 20 min, sin reserva. No bajarse en Shin-Onomichi.",
+      reserva:"Comprar en SmartEX", prioridad:"Venta abierta desde el 14 de septiembre", enlace:"https://smart-ex.jp/en/index.php", enlaceTexto:"SmartEX · TOKYO → FUKUYAMA, 14 oct", doc:"" },
+    { fecha:"2026-10-15", tramo:"Onomichi → Setoda en bicicleta", detalle:"Retiro en Onomichi, devolución en Setoda Port. Confirmar que la categoría de bicicleta admite devolución en otro terminal. Seguir la línea azul del Shimanami Kaido.",
+      reserva:"Reservar bicicleta", prioridad:"Hacerlo ya", enlace:"https://www.asp-rsv.jp/onomichi-base/en/sp/index.cgi", enlaceTexto:"Reserva Onomichi Base", doc:"" },
+    { fecha:"2026-10-16", tramo:"Setoda → Naoshima", detalle:"Barco Setoda Port → Mihara Port, idealmente 08:15. Caminata 5–10 min a Mihara Station. Kodama a Okayama. JR Uno Line a Uno, 50–60 min. Ferry Uno → Miyanoura, 20 min: apuntar al de 12:15 o al de 14:25.",
+      reserva:"Se compra en el momento", prioridad:"Revisar horarios 48 h antes", enlace:"https://shikokukisen.com/uno-miyanoura/", enlaceTexto:"Horarios Uno ↔ Miyanoura", doc:"" },
+    { fecha:"2026-10-17", tramo:"Naoshima → Kyoto", detalle:"Ferry Miyanoura → Uno por la tarde, referencias 14:55, 16:35 o 17:35. JR Uno Line a Okayama. Nozomi Okayama → Kyoto, cerca de 1 hora.",
+      reserva:"Opcional", prioridad:"", enlace:"https://smart-ex.jp/en/index.php", enlaceTexto:"SmartEX · OKAYAMA → KYOTO, 17 oct", doc:"" },
+    { fecha:"2026-10-20", tramo:"Kyoto → Osaka", detalle:"JR Special Rapid desde Kyoto Station, unos 30 min. Pagar con IC card. Si el hotel queda en Namba, seguir en metro.",
+      reserva:"Sin reserva", prioridad:"", enlace:"", enlaceTexto:"", doc:"" },
+    { fecha:"2026-10-22", tramo:"Osaka → Tokio → aeropuerto", detalle:"Nozomi desde Shin-Osaka, 2 h 30 – 2 h 45. Llegar a la estación 25–30 min antes. Meta de llegada al aeropuerto: entre 18:30 y 19:00 para el vuelo de las 22:00.",
+      segun:"aeropuertoSalida",
+      opciones:{
+        "Haneda":"Salir de Shin-Osaka entre 13:00 y 14:00. Bajar en Shinagawa y tomar Keikyu hacia Haneda: 25–35 min más caminatas y espera.",
+        "Narita":"Salir de Shin-Osaka entre 12:00 y 13:00. Bajar en Tokyo Station y tomar Narita Express con asiento reservado: cerca de 60 min más conexión. Usar el margen más conservador."
+      },
+      reserva:"Comprar en SmartEX", prioridad:"Venta abierta desde el 22 de septiembre", enlace:"https://smart-ex.jp/en/index.php", enlaceTexto:"SmartEX · SHIN-OSAKA → SHINAGAWA, 22 oct", doc:"" }
+  ],
+
+  // Restaurantes: agregar acá a medida que reserven.
+  comidas: [],
+
+  pendientes: [
+    { id:"smartex-cuenta", texto:"Crear cuenta en SmartEX y comprobar que la tarjeta pasa 3-D Secure", cuando:"Ahora" },
+    { id:"bici", texto:"Reservar bicicleta Onomichi → Setoda Port para el 15 de octubre", cuando:"Ahora" },
+    { id:"shink-1", texto:"Comprar Tokyo → Fukuyama para el 14 de octubre", cuando:"Desde el 14 de septiembre, 10:00 JST" },
+    { id:"shink-2", texto:"Comprar Shin-Osaka → Tokyo o Shinagawa para el 22 de octubre", cuando:"Desde el 22 de septiembre, 10:00 JST" },
+    { id:"hoteles-dup", texto:"Resolver las reservas duplicadas de Kyoto y Osaka", cuando:"Antes de que venzan las cancelaciones gratis" },
+    { id:"takkyubin", texto:"Despachar maletas grandes al hotel de Kyoto y confirmar que lo reciben", cuando:"Antes de salir de Tokio u Onomichi" },
+    { id:"clima", texto:"Revisar clima para el Shimanami Kaido y la política de cancelación de la bici", cuando:"14 de octubre" },
+    { id:"ferries", texto:"Verificar horarios Setoda → Mihara y Uno → Miyanoura", cuando:"15 de octubre" },
+    // "resuelvePor" apunta a una decisión. Cuando esa decisión deja de estar
+    // vacía, el pendiente se marca solo y muestra la respuesta.
+    { id:"aeropuerto-llegada", texto:"Confirmar a qué aeropuerto llegan el 10 de octubre", cuando:"Antes de viajar", resuelvePor:"aeropuertoLlegada" },
+    { id:"aeropuerto-salida", texto:"Confirmar si el vuelo del 22 sale de Haneda o Narita y ajustar la salida de Osaka", cuando:"21 de octubre", resuelvePor:"aeropuertoSalida" }
+  ],
+
+  // Documentos: pegar acá los enlaces de Drive de pasajes, vouchers y reservas.
+  documentos: [
+    { nombre:"Carpeta del viaje en Drive", url:"" },
+    { nombre:"Itinerario detallado", url:"" },
+    { nombre:"Guía de transporte", url:"" }
+  ],
+
+  notas: "Los horarios de barcos y ferries se reconfirman cerca de la fecha. Para bici e islas, mochila pequeña: las maletas grandes viajan por takkyubin al hotel de Kyoto."
+};
+</script>
+
+<header>
+  <div class="wrap">
+    <h1 id="t-titulo"></h1>
+    <p class="fechas" id="t-fechas"></p>
+  </div>
+  <div class="ruta" id="ruta"></div>
+</header>
+
+<nav>
+  <div class="tabs" id="tabs" role="tablist"></div>
+</nav>
+
+<main class="wrap">
+  <section id="p-hoy"></section>
+  <section id="p-itinerario" hidden></section>
+  <section id="p-hoteles" hidden></section>
+  <section id="p-transporte" hidden></section>
+  <section id="p-comidas" hidden></section>
+  <section id="p-documentos" hidden></section>
+</main>
+
+<footer id="pie"></footer>
+
+<script>
+(function(){
+  const $ = s => document.querySelector(s);
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const DOW = ["dom","lun","mar","mié","jue","vie","sáb"];
+  const MES = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+
+  // Fechas como texto plano, sin zonas horarias que corran un día.
+  const d = f => { const [a,m,x] = f.split("-").map(Number); return new Date(a, m-1, x); };
+  const corto = f => { const t = d(f); return t.getDate() + " " + MES[t.getMonth()]; };
+  const hoyISO = () => { const t = new Date();
+    return t.getFullYear() + "-" + String(t.getMonth()+1).padStart(2,"0") + "-" + String(t.getDate()).padStart(2,"0"); };
+  const dias = (a,b) => Math.round((d(b) - d(a)) / 86400000);
+
+  const HOY = hoyISO();
+  const INICIO = VIAJE.dias[0].fecha;
+  const FIN = VIAJE.dias[VIAJE.dias.length-1].fecha;
+
+  /* ---------- Portada ---------- */
+  $("#t-titulo").textContent = VIAJE.titulo;
+  $("#t-fechas").textContent = VIAJE.fechas;
+
+  $("#ruta").innerHTML = VIAJE.ruta.map(p => `
+    <div class="parada${p.base ? " base" : ""}">
+      <span class="punto"></span>
+      <span class="nom">${esc(p.lugar)}</span>
+      <span class="noches">${p.noches ? p.noches + (p.noches === 1 ? " noche" : " noches") : "&nbsp;"}</span>
+    </div>`).join("");
+
+  /* ---------- Choques de hotel ---------- */
+  // Dos reservas chocan si sus estadías se solapan.
+  const choques = new Set();
+  VIAJE.hoteles.forEach((a,i) => VIAJE.hoteles.forEach((b,j) => {
+    if (i < j && d(a.entra) < d(b.sale) && d(b.entra) < d(a.sale)) { choques.add(i); choques.add(j); }
+  }));
+
+  /* ---------- Pendientes guardados en el navegador ---------- */
+  let hechos = {};
+  try { hechos = JSON.parse(localStorage.getItem("japon-pendientes") || "{}"); } catch(e) { hechos = {}; }
+  const guardar = () => { try { localStorage.setItem("japon-pendientes", JSON.stringify(hechos)); } catch(e){} };
+
+  /* ---------- Panel: Hoy ---------- */
+  function panelHoy(){
+    let h = "";
+    const faltan = dias(HOY, INICIO);
+    const enViaje = HOY >= INICIO && HOY <= FIN;
+
+    if (enViaje) {
+      const hoy = VIAJE.dias.find(x => x.fecha === HOY);
+      h += `<h2 class="titulo">Hoy</h2><p class="sub">Día ${dias(INICIO,HOY)+1} de ${VIAJE.dias.length}</p>`;
+      if (hoy) h += tarjetaDia(hoy, true);
+      const sig = VIAJE.dias.find(x => x.fecha > HOY);
+      if (sig) h += `<h2 class="titulo" style="margin-top:26px">Mañana</h2><div class="sub"></div>` + tarjetaDia(sig, false);
+      const tr = VIAJE.transporte.filter(t => t.fecha >= HOY).slice(0,1);
+      if (tr.length) h += `<h2 class="titulo" style="margin-top:26px">Próximo tramo</h2><p class="sub">${esc(corto(tr[0].fecha))}</p>` + tarjetaTramo(tr[0]);
+    } else if (faltan > 0) {
+      h += `<h2 class="titulo">Faltan ${faltan} días</h2><p class="sub">Salida el ${corto(INICIO)} de 2026</p>`;
+    } else {
+      h += `<h2 class="titulo">El viaje terminó</h2><p class="sub">${esc(VIAJE.fechas)}</p>`;
+    }
+
+    if (choques.size) {
+      const lista = [...choques].map(i => VIAJE.hoteles[i]);
+      const ciudades = [...new Set(lista.map(x => x.ciudad))].join(" y ");
+      h += `<div class="aviso"><h3>Reservas de hotel superpuestas</h3>
+        <p>Hay ${lista.length} reservas que se pisan en ${esc(ciudades)}. Revisa la sección Hoteles.</p></div>`;
+    }
+
+    const dec = VIAJE.decisiones || {};
+    const respuesta = p => p.resuelvePor ? (dec[p.resuelvePor] || "") : "";
+    const cerrado = p => p.resuelvePor ? !!respuesta(p) : !!hechos[p.id];
+    const abiertos = VIAJE.pendientes.filter(p => !cerrado(p));
+
+    h += `<h2 class="titulo" style="margin-top:28px">Pendientes</h2>
+          <p class="sub">${abiertos.length} sin resolver de ${VIAJE.pendientes.length}</p>
+          <div id="lista-pendientes">` +
+      VIAJE.pendientes.map(p => {
+        const r = respuesta(p);
+        // Los pendientes con respuesta no se marcan a mano: se resuelven
+        // escribiendo la decisión en el archivo, para que ambos la vean.
+        const caja = p.resuelvePor
+          ? `<input type="checkbox" checked disabled>`
+          : `<input type="checkbox" id="chk-${esc(p.id)}" data-id="${esc(p.id)}" ${hechos[p.id] ? "checked" : ""}>`;
+        const etiqueta = p.resuelvePor
+          ? `<label>${esc(p.texto)}<span class="cuando">${r ? "Respuesta: " + esc(r) : esc(p.cuando)}</span></label>`
+          : `<label for="chk-${esc(p.id)}">${esc(p.texto)}<span class="cuando">${esc(p.cuando)}</span></label>`;
+        return `<div class="check${cerrado(p) ? " listo" : ""}">
+          ${p.resuelvePor && !r ? `<input type="checkbox" disabled>` : caja}${etiqueta}
+        </div>`;
+      }).join("") + `</div>`;
+
+    return h;
+  }
+
+  function tarjetaDia(x, destacado){
+    return `<div class="card${destacado ? " choque" : ""}" style="${destacado ? "border-left-color:var(--shu)" : ""}">
+      <h3>${esc(x.plan)}</h3>
+      <p class="meta">${esc(corto(x.fecha))} · duermen en ${esc(x.duerme)}</p>
+      <p class="meta">${esc(x.como)}</p></div>`;
+  }
+
+  /* ---------- Panel: Itinerario ---------- */
+  function panelItinerario(){
+    return `<h2 class="titulo">Itinerario</h2>
+      <p class="sub">${esc(VIAJE.fechas)}</p>` +
+      VIAJE.dias.map(x => {
+        const t = d(x.fecha);
+        return `<div class="dia${x.fecha === HOY ? " hoy" : ""}">
+          <div class="fecha"><span class="num">${t.getDate()}</span><span class="dow">${DOW[t.getDay()]}</span></div>
+          <div>
+            <div class="plan">${esc(x.plan)}</div>
+            <div class="donde">Duermen en ${esc(x.duerme)}</div>
+            <div class="como">${esc(x.como)}</div>
+          </div></div>`;
+      }).join("");
+  }
+
+  /* ---------- Panel: Hoteles ---------- */
+  function panelHoteles(){
+    let h = `<h2 class="titulo">Hoteles</h2><p class="sub">${VIAJE.hoteles.length} reservas</p>`;
+    if (choques.size) {
+      h += `<div class="aviso"><h3>Revisar antes de seguir</h3>
+        <p>Las reservas marcadas en rojo ocupan las mismas noches. Conviene cancelar una de cada par mientras la cancelación siga siendo gratis.</p></div>`;
+    }
+    h += VIAJE.hoteles.map((x,i) => `
+      <div class="card${choques.has(i) ? " choque" : ""}">
+        <div class="fila">
+          <h3>${esc(x.nombre)}</h3>
+          <span class="precio">${esc(x.precio)}</span>
+        </div>
+        <p class="meta">${esc(x.ciudad)} · ${esc(corto(x.entra))} al ${esc(corto(x.sale))} · ${dias(x.entra,x.sale)} ${dias(x.entra,x.sale) === 1 ? "noche" : "noches"}</p>
+        <span class="tag ${choques.has(i) ? "alerta" : "ok"}">${choques.has(i) ? "Se superpone con otra reserva" : esc(x.estado)}</span>
+        ${x.doc ? `<p class="meta" style="margin-top:9px"><a href="${esc(x.doc)}" target="_blank" rel="noopener">Ver reserva</a></p>` : ""}
+      </div>`).join("");
+    return h;
+  }
+
+  /* ---------- Panel: Transporte ---------- */
+  // Si el tramo depende de una decisión, muestra la variante elegida.
+  // Mientras no esté decidida, muestra todas las opciones.
+  function variantes(x){
+    if (!x.segun || !x.opciones) return "";
+    const elegida = (VIAJE.decisiones || {})[x.segun];
+    if (elegida && x.opciones[elegida]) {
+      return `<p class="meta" style="margin-top:6px"><strong>${esc(elegida)}:</strong> ${esc(x.opciones[elegida])}</p>`;
+    }
+    return `<p class="meta" style="margin-top:6px;color:var(--shu)">Falta decidir. Las dos opciones:</p>` +
+      Object.keys(x.opciones).map(k =>
+        `<p class="meta" style="margin-top:4px"><strong>${esc(k)}:</strong> ${esc(x.opciones[k])}</p>`).join("");
+  }
+
+  function tarjetaTramo(x){
+    return `<div class="card">
+      <div class="fila"><h3>${esc(x.tramo)}</h3><span class="precio">${esc(corto(x.fecha))}</span></div>
+      <p class="meta" style="margin-top:6px">${esc(x.detalle)}</p>
+      ${variantes(x)}
+      <span class="tag ${/SmartEX|Reservar/.test(x.reserva) ? "alerta" : "ok"}">${esc(x.reserva)}</span>
+      ${x.prioridad ? `<p class="meta" style="margin-top:7px">${esc(x.prioridad)}</p>` : ""}
+      ${x.enlace ? `<p class="meta" style="margin-top:7px"><a href="${esc(x.enlace)}" target="_blank" rel="noopener">${esc(x.enlaceTexto)}</a></p>` : ""}
+      ${x.doc ? `<p class="meta" style="margin-top:4px"><a href="${esc(x.doc)}" target="_blank" rel="noopener">Ver pasaje</a></p>` : ""}
+    </div>`;
+  }
+  function panelTransporte(){
+    return `<h2 class="titulo">Transporte</h2>
+      <p class="sub">Reservar solo los dos Shinkansen largos y la bicicleta. Trenes locales y ferries se compran en el momento.</p>` +
+      VIAJE.transporte.map(tarjetaTramo).join("");
+  }
+
+  /* ---------- Panel: Comidas ---------- */
+  function panelComidas(){
+    let h = `<h2 class="titulo">Restaurantes</h2><p class="sub">Reservas y lugares por probar</p>`;
+    if (!VIAJE.comidas.length) {
+      h += `<div class="vacio">Todavía no hay restaurantes cargados.<br>
+        Se agregan en el bloque <code>comidas</code> del archivo.</div>`;
+      return h;
+    }
+    h += VIAJE.comidas.map(x => `
+      <div class="card">
+        <div class="fila"><h3>${esc(x.nombre)}</h3><span class="precio">${esc(corto(x.fecha))}</span></div>
+        <p class="meta">${esc(x.ciudad || "")}${x.hora ? " · " + esc(x.hora) : ""}</p>
+        ${x.nota ? `<p class="meta">${esc(x.nota)}</p>` : ""}
+        ${x.doc ? `<p class="meta" style="margin-top:8px"><a href="${esc(x.doc)}" target="_blank" rel="noopener">Ver reserva</a></p>` : ""}
+      </div>`).join("");
+    return h;
+  }
+
+  /* ---------- Panel: Documentos ---------- */
+  function panelDocumentos(){
+    const listos = VIAJE.documentos.filter(x => x.url);
+    let h = `<h2 class="titulo">Documentos</h2>
+      <p class="sub">Los archivos viven en Drive. Acá solo están los enlaces, así que piden tu cuenta para abrirse.</p>`;
+    if (!listos.length) {
+      h += `<div class="vacio">Faltan los enlaces de Drive.<br>
+        Se pegan en el bloque <code>documentos</code> del archivo.</div>`;
+    } else {
+      h += `<div class="links">` + listos.map(x =>
+        `<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.nombre)}</a>`).join("") + `</div>`;
+    }
+    h += `<div class="aviso info" style="margin-top:20px"><h3>Antes de viajar</h3>
+      <p>Marcar en la app de Drive los documentos como disponibles sin conexión. En el metro de Tokio no siempre hay señal.</p></div>`;
+    return h;
+  }
+
+  /* ---------- Navegación ---------- */
+  const PANELES = [
+    { id:"hoy",         nombre:"Hoy",         render:panelHoy },
+    { id:"itinerario",  nombre:"Itinerario",  render:panelItinerario },
+    { id:"hoteles",     nombre:"Hoteles",     render:panelHoteles },
+    { id:"transporte",  nombre:"Transporte",  render:panelTransporte },
+    { id:"comidas",     nombre:"Restaurantes",render:panelComidas },
+    { id:"documentos",  nombre:"Documentos",  render:panelDocumentos }
+  ];
+
+  $("#tabs").innerHTML = PANELES.map((p,i) =>
+    `<button role="tab" data-p="${p.id}" aria-selected="${i===0}">${p.nombre}</button>`).join("");
+
+  function abrir(id){
+    PANELES.forEach(p => {
+      const el = document.getElementById("p-" + p.id);
+      const activo = p.id === id;
+      el.hidden = !activo;
+      if (activo) el.innerHTML = p.render();
+    });
+    document.querySelectorAll("#tabs button").forEach(b =>
+      b.setAttribute("aria-selected", b.dataset.p === id));
+    window.scrollTo({ top:0 });
+  }
+
+  $("#tabs").addEventListener("click", e => {
+    const b = e.target.closest("button");
+    if (b) abrir(b.dataset.p);
+  });
+
+  // Marcar pendientes
+  document.addEventListener("change", e => {
+    if (e.target.matches('input[type="checkbox"][data-id]')) {
+      hechos[e.target.dataset.id] = e.target.checked;
+      guardar();
+      abrir("hoy");
+    }
+  });
+
+  $("#pie").textContent = VIAJE.notas;
+  abrir("hoy");
+})();
+</script>
+</body>
+</html>

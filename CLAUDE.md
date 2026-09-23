@@ -42,6 +42,10 @@ explícitamente sobre el diseño o el comportamiento del sitio.
 - `pendientes` — con `resuelvePor` si se cierran escribiendo una decisión,
   o sin ese campo si son un simple visto bueno.
 - `comidas` y `documentos` — listas que empiezan vacías.
+- Hoteles, tramos y restaurantes se abren al tocarlos y muestran sus
+  documentos: el enlace de `doc`, más los de una lista opcional `docs`
+  (`{ nombre, url }`), y las capturas que cada uno guarda en su celular.
+  Esas capturas viven solo en el navegador y nunca pasan por el repo.
 
 ## Al terminar
 

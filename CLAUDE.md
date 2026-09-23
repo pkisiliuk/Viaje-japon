@@ -36,6 +36,9 @@ explícitamente sobre el diseño o el comportamiento del sitio.
   marca. No hace falta señalarlas a mano.
 - `transporte` — tramos. Si un tramo depende de una decisión, lleva `segun`
   con el nombre de la decisión y `opciones` con un texto por alternativa.
+  Puede llevar también `enlaces`, con un enlace por alternativa. Un tramo
+  queda como comprado (en verde) si tiene el pasaje en `doc` o si `reserva`
+  dice `"Comprado"`.
 - `pendientes` — con `resuelvePor` si se cierran escribiendo una decisión,
   o sin ese campo si son un simple visto bueno.
 - `comidas` y `documentos` — listas que empiezan vacías.

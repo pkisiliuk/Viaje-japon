@@ -45,7 +45,11 @@ explícitamente sobre el diseño o el comportamiento del sitio.
 - Hoteles, tramos y restaurantes se abren al tocarlos y muestran sus
   documentos: el enlace de `doc`, más los de una lista opcional `docs`
   (`{ nombre, url }`), y las capturas que cada uno guarda en su celular.
-  Esas capturas viven solo en el navegador y nunca pasan por el repo.
+  Cada celular guarda una copia de las capturas en el navegador. Si
+  `drive.script` tiene la URL del Apps Script (`apps-script/`), además se
+  suben a la carpeta de Drive compartida y se sincronizan entre los dos.
+  Las capturas nunca pasan por el repo. La clave del script tampoco:
+  cada uno la escribe en su celular.
 
 ## Al terminar
 

@@ -139,9 +139,11 @@
   .captura img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
   .captura button.borrar{margin-top:3px;background:none;border:0;font:inherit;font-size:12px;
     color:var(--shu);padding:2px 0;cursor:pointer}
+  .captura .sin-subir{display:block;font-size:11.5px;color:var(--ink-2)}
   .agregar{display:inline-block;margin-top:12px;padding:10px 14px;border:1px solid var(--sea);
     border-radius:var(--radius);color:var(--sea);font-size:14.5px;cursor:pointer}
   .agregar input{display:none}
+  button.agregar{background:none;font:inherit;font-size:14.5px}
   .hoja .nota{font-size:12.5px;color:var(--ink-2);margin:10px 0 0}
   #visor{width:100%;height:100%;max-width:none;max-height:none;margin:0;border:0;background:#0B1422;
     overflow:auto;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
@@ -275,6 +277,10 @@ const VIAJE = {
     { nombre:"Guía de transporte", url:"" }
   ],
 
+  // Drive compartido para las capturas. Pegar acá la URL del Apps Script
+  // (ver apps-script/LEEME.md). Vacío: las capturas quedan solo en cada celular.
+  drive: { script: "" },
+
   notas: "Los horarios de barcos y ferries se reconfirman cerca de la fecha. Para bici e islas, mochila pequeña: las maletas grandes viajan por takkyubin al hotel de Kyoto."
 };
 </script>
@@ -364,8 +370,9 @@ const VIAJE = {
   const attrFicha = f => `data-clave="${esc(f.clave)}" role="button" tabindex="0"`;
   const pistaDocs = f => `<p class="docs-hint" data-cuenta="${esc(f.clave)}">Documentos ›</p>`;
 
-  // Capturas: se guardan en el navegador de este celular (IndexedDB).
-  // No se suben a ningún lado, así que funcionan sin señal.
+  // Capturas: cada celular guarda una copia en su navegador (IndexedDB), así
+  // se ven sin señal. Si hay Apps Script configurado, además se suben a la
+  // carpeta de Drive compartida y cada celular baja las que subió el otro.
   const Capturas = (() => {
     let db;
     const conectar = () => db || (db = new Promise((ok, mal) => {
@@ -381,19 +388,106 @@ const VIAJE = {
       t.oncomplete = () => ok(req.result);
       t.onerror = t.onabort = () => mal(t.error);
     }));
+    const visibles = l => l.filter(c => !c.borrada);
     return {
-      lista: clave => tx("readonly", s => s.index("clave").getAll(clave)),
+      lista: clave => tx("readonly", s => s.index("clave").getAll(clave)).then(visibles),
+      visibles: () => tx("readonly", s => s.getAll()).then(visibles),
       todas: () => tx("readonly", s => s.getAll()),
-      agregar: (clave, archivo) => tx("readwrite", s => s.add({ clave, blob:archivo, nombre:archivo.name, fecha:Date.now() })),
-      borrar: id => tx("readwrite", s => s.delete(id))
+      agregar: c => tx("readwrite", s => s.add(c)),
+      guardar: c => tx("readwrite", s => s.put(c)),
+      borrar: id => tx("readwrite", s => s.delete(id)),
+      get: id => tx("readonly", s => s.get(id))
     };
   })();
+
+  /* ---------- Drive compartido (Apps Script) ---------- */
+  const SCRIPT = (VIAJE.drive || {}).script || "";
+  const Nube = {
+    clave(){ try { return localStorage.getItem("japon-drive-clave") || ""; } catch(e) { return ""; } },
+    fijarClave(v){ try { v ? localStorage.setItem("japon-drive-clave", v) : localStorage.removeItem("japon-drive-clave"); } catch(e){} },
+    activa(){ return !!(SCRIPT && this.clave()); },
+    estado:"", ultima:0, corriendo:null,
+    async llamar(accion, datos){
+      // text/plain evita el preflight CORS, que Apps Script no contesta.
+      const r = await fetch(SCRIPT, { method:"POST", headers:{ "Content-Type":"text/plain;charset=utf-8" },
+        body:JSON.stringify(Object.assign({ clave:this.clave(), accion }, datos)) });
+      const j = await r.json();
+      if (j.error === "clave") { this.fijarClave(""); throw new Error("clave"); }
+      if (j.error) throw new Error(j.error);
+      return j;
+    }
+  };
+  const aBase64 = blob => new Promise((ok, mal) => {
+    const r = new FileReader();
+    r.onload = () => ok(String(r.result).split(",")[1]);
+    r.onerror = () => mal(r.error);
+    r.readAsDataURL(blob);
+  });
+  const deBase64 = (b64, tipo) => {
+    const bin = atob(b64), bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return new Blob([bytes], { type:tipo });
+  };
+  // Nombre legible en Drive: "Asakusa View Hotel · 2026-09-23 14.05.png"
+  const nombreEnDrive = (clave, archivo) => {
+    const f = FICHAS[clave], t = new Date(), dd = n => String(n).padStart(2, "0");
+    const ext = (archivo.name.match(/\.[a-z0-9]+$/i) || [".jpg"])[0].toLowerCase();
+    return (f ? f.titulo : "Captura") + " · " + t.getFullYear() + "-" + dd(t.getMonth()+1) + "-" + dd(t.getDate()) +
+      " " + dd(t.getHours()) + "." + dd(t.getMinutes()) + "." + dd(t.getSeconds()) + ext;
+  };
+
+  // Sube lo pendiente, aplica borrados y baja lo que subió el otro celular.
+  function sincronizar(){
+    if (!Nube.activa() || !navigator.onLine) return Promise.resolve(false);
+    if (Nube.corriendo) return Nube.corriendo;
+    Nube.estado = "Sincronizando con Drive…"; refrescar(false);
+    Nube.corriendo = (async () => {
+      let cambios = false;
+      const locales = await Capturas.todas();
+      for (const c of locales.filter(c => c.borrada)) {
+        if (c.driveId) await Nube.llamar("borrar", { id:c.driveId });
+        await Capturas.borrar(c.id); cambios = true;
+      }
+      for (const c of locales.filter(c => !c.borrada && !c.driveId)) {
+        const r = await Nube.llamar("subir", { item:c.clave, nombre:c.nombre, tipo:c.blob.type || "image/jpeg", datos:await aBase64(c.blob) });
+        c.driveId = r.id; await Capturas.guardar(c); cambios = true;
+      }
+      const { archivos } = await Nube.llamar("listar", {});
+      const enDrive = new Set(archivos.map(a => a.id));
+      const aca = await Capturas.todas();
+      const tengo = new Set(aca.map(c => c.driveId).filter(Boolean));
+      for (const a of archivos.filter(a => !tengo.has(a.id))) {
+        const b = await Nube.llamar("bajar", { id:a.id });
+        await Capturas.agregar({ clave:a.item, blob:deBase64(b.datos, b.tipo), nombre:a.nombre, fecha:a.fecha, driveId:a.id });
+        cambios = true;
+      }
+      // Lo que ya no está en Drive lo borró el otro: se saca de acá también.
+      for (const c of aca.filter(c => c.driveId && !c.borrada && !enDrive.has(c.driveId))) {
+        await Capturas.borrar(c.id); cambios = true;
+      }
+      return cambios;
+    })().then(cambios => {
+      Nube.estado = ""; Nube.ultima = Date.now(); return cambios;
+    }, err => {
+      Nube.estado = err.message === "clave"
+        ? "La clave de Drive no es correcta. Vuelve a conectar."
+        : "No se pudo sincronizar con Drive. Se reintenta cuando haya señal.";
+      return true;
+    }).then(cambios => { Nube.corriendo = null; refrescar(cambios); return cambios; });
+    return Nube.corriendo;
+  }
+
+  // Vuelve a dibujar contadores y, si está abierta, la ventana de documentos.
+  function refrescar(todo){
+    if (hoja.open && !visor.open) abrirFicha(hoja.dataset.clave);
+    if (todo) contarDocs();
+  }
 
   // Actualiza el "Documentos ›" de cada tarjeta con cuántos hay.
   function contarDocs(){
     const pistas = document.querySelectorAll("[data-cuenta]");
     if (!pistas.length) return;
-    Capturas.todas().catch(() => []).then(todas => pistas.forEach(p => {
+    Capturas.visibles().catch(() => []).then(todas => pistas.forEach(p => {
       const f = FICHAS[p.dataset.cuenta];
       const n = f.drive.length + todas.filter(c => c.clave === f.clave).length;
       p.textContent = n ? `Documentos (${n}) ›` : "Agregar documentos ›";
@@ -404,6 +498,17 @@ const VIAJE = {
   const visor = document.getElementById("visor");
   let urls = [];
   const soltarUrls = () => { urls.forEach(u => URL.revokeObjectURL(u)); urls = []; };
+
+  function estadoNube(capturas){
+    if (!SCRIPT) return `<p class="nota">Las capturas quedan guardadas solo en este celular y se ven sin señal. No se suben al repositorio.</p>`;
+    if (!Nube.clave()) return `<p class="nota">${Nube.estado ? esc(Nube.estado) + " " : ""}Conecta este celular a la carpeta de Drive para que las capturas les lleguen a los dos.</p>
+      <button type="button" class="agregar" data-conectar>Conectar con Drive</button>`;
+    const faltan = capturas.filter(c => !c.driveId).length;
+    const texto = Nube.estado ||
+      (faltan ? `${faltan === 1 ? "1 captura espera" : faltan + " capturas esperan"} señal para subir a Drive.`
+              : "Guardadas en Drive y en este celular. Se ven sin señal.");
+    return `<p class="nota">${esc(texto)}</p>`;
+  }
 
   async function abrirFicha(clave){
     const f = FICHAS[clave];
@@ -423,38 +528,56 @@ const VIAJE = {
           const u = URL.createObjectURL(c.blob); urls.push(u);
           return `<div class="captura">
             <button type="button" class="ver" data-ver="${u}" aria-label="Ver ${esc(c.nombre || "captura")}"><img src="${u}" alt=""></button>
-            <button type="button" class="borrar" data-borrar="${c.id}">Borrar</button></div>`;
-        }).join("") + `</div>` : `<p class="meta">Todavía no hay capturas en este celular.</p>`) +
-        `<label class="agregar">Agregar captura<input type="file" accept="image/*" multiple data-agregar="${esc(clave)}"></label>
-         <p class="nota">Las capturas quedan guardadas solo en este celular y se ven sin señal. No se suben a internet ni al repositorio, así que cada uno tiene que agregar las suyas.</p>`;
+            <button type="button" class="borrar" data-borrar="${c.id}">Borrar</button>${SCRIPT && !c.driveId ? `<span class="sin-subir">sin subir</span>` : ""}</div>`;
+        }).join("") + `</div>` : `<p class="meta">Todavía no hay capturas.</p>`) +
+        `<label class="agregar">Agregar captura<input type="file" accept="image/*" multiple data-agregar="${esc(clave)}"></label>` +
+        estadoNube(capturas);
 
     hoja.innerHTML = `<button type="button" class="cerrar" data-cerrar>Cerrar</button>
       <h3>${esc(f.titulo)}</h3><p class="meta">${esc(f.sub)}</p>
       <h4>Capturas</h4>${fotos}
-      <h4>En Drive</h4>${drive}`;
+      <h4>Enlaces de Drive</h4>${drive}`;
     hoja.dataset.clave = clave;
-    if (!hoja.open) hoja.showModal();
+    if (!hoja.open) {
+      hoja.showModal();
+      if (Date.now() - Nube.ultima > 15000) sincronizar();
+    }
   }
 
   hoja.addEventListener("click", async e => {
     if (e.target === hoja || e.target.closest("[data-cerrar]")) return hoja.close();
     const ver = e.target.closest("[data-ver]");
     if (ver) { visor.querySelector("img").src = ver.dataset.ver; visor.showModal(); return; }
-    const borrar = e.target.closest("[data-borrar]");
-    if (borrar && confirm("¿Borrar esta captura de este celular?")) {
-      await Capturas.borrar(Number(borrar.dataset.borrar));
-      abrirFicha(hoja.dataset.clave); contarDocs();
+    if (e.target.closest("[data-conectar]")) {
+      const v = (prompt("Clave de Drive (la misma para los dos):") || "").trim();
+      if (v) { Nube.fijarClave(v); Nube.estado = ""; sincronizar(); }
+      return abrirFicha(hoja.dataset.clave);
     }
+    const borrar = e.target.closest("[data-borrar]");
+    if (!borrar) return;
+    const c = await Capturas.get(Number(borrar.dataset.borrar));
+    if (!c || !confirm(c.driveId ? "¿Borrar esta captura? También se borra de Drive y del celular del otro."
+                                 : "¿Borrar esta captura?")) return;
+    // Si ya está en Drive, se marca y se borra allá en la próxima sincronización.
+    if (c.driveId) { c.borrada = true; await Capturas.guardar(c); } else await Capturas.borrar(c.id);
+    abrirFicha(hoja.dataset.clave); contarDocs(); sincronizar();
   });
   hoja.addEventListener("change", async e => {
     const input = e.target.closest("[data-agregar]");
     if (!input || !input.files.length) return;
+    const clave = input.dataset.agregar;
     try {
-      for (const archivo of input.files) await Capturas.agregar(input.dataset.agregar, archivo);
+      for (const archivo of input.files)
+        await Capturas.agregar({ clave, blob:archivo, nombre:nombreEnDrive(clave, archivo), fecha:Date.now() });
       // Pide que el navegador no borre lo guardado cuando falta espacio.
       if (navigator.storage && navigator.storage.persist) navigator.storage.persist();
     } catch(err) { alert("No se pudo guardar la captura en este celular."); }
-    abrirFicha(input.dataset.agregar); contarDocs();
+    abrirFicha(clave); contarDocs(); sincronizar();
+  });
+  window.addEventListener("online", sincronizar);
+  // Al volver a la app, trae lo que haya subido el otro.
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden && Date.now() - Nube.ultima > 15000) sincronizar();
   });
   hoja.addEventListener("close", soltarUrls);
   document.getElementById("visor-cerrar").addEventListener("click", () => visor.close());
@@ -689,6 +812,7 @@ const VIAJE = {
 
   $("#pie").textContent = VIAJE.notas;
   abrir("hoy");
+  sincronizar();
 })();
 </script>
 </body>

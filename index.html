@@ -103,6 +103,15 @@
   .dia .plan{font-size:15.5px}
   .dia .donde{font-size:13px;color:var(--sea);margin-top:3px}
   .dia .como{font-size:13px;color:var(--ink-2);margin-top:5px}
+  .agenda{list-style:none;margin:8px 0 0;padding:0;font-size:13.5px}
+  .agenda li{display:grid;grid-template-columns:44px 1fr;gap:8px;padding:4px 0;
+    border-top:1px dotted var(--line)}
+  .agenda li:first-child{border-top:0}
+  .agenda .h{color:var(--ink);font-weight:600}
+  .agenda .sin-h{color:var(--line)}
+  .agenda .tipo{color:var(--ink-2)}
+  .agenda [data-clave]{cursor:pointer}
+  .agenda [data-clave] .que{color:var(--sea)}
   .dia.hoy{background:var(--card);margin:0 -14px;padding-left:14px;padding-right:14px;
     border-left:3px solid var(--shu)}
 
@@ -195,16 +204,20 @@ const VIAJE = {
     { fecha:"2026-10-10", plan:"Llegada a Tokio, paseo suave", duerme:"Tokio", como:"Haneda → hotel en Asakusa: 45–60 min" },
     { fecha:"2026-10-11", plan:"Tokio: Asakusa, Ginza, Marunouchi", duerme:"Tokio", como:"Metro y tren urbano" },
     { fecha:"2026-10-12", plan:"Diseño y arquitectura: Omotesando, Aoyama, Nezu Museum", duerme:"Tokio", como:"Metro, tren urbano, taxi corto" },
-    { fecha:"2026-10-13", plan:"Arte y barrios: Roppongi, teamLab, Daikanyama y Nakameguro. Cena 20:15 en Esprit, Ginza", duerme:"Tokio", como:"Metro, tren urbano, taxi corto" },
-    { fecha:"2026-10-14", plan:"Tokio → Onomichi, tarde en Onomichi", duerme:"Onomichi", como:"Nozomi 25 Tokyo 10:30 → Fukuyama 14:03, luego tren local 20 min" },
+    { fecha:"2026-10-13", plan:"Arte y barrios: Roppongi, teamLab, Daikanyama y Nakameguro", duerme:"Tokio", como:"Metro, tren urbano, taxi corto" },
+    { fecha:"2026-10-14", plan:"Tokio → Onomichi, tarde en Onomichi", duerme:"Onomichi", como:"Nozomi 25 Tokyo 10:30 → Fukuyama 14:03, luego tren local 20 min",
+      agenda:[ { hora:"14:03", texto:"Llegada a Fukuyama. JR Sanyō Line a Onomichi, 20 min" } ] },
     { fecha:"2026-10-15", plan:"Shimanami Kaido en bicicleta: Onomichi → Setoda", duerme:"Setoda", como:"30–35 km. Pedaleo 3–4 h, con paradas 5–6 h" },
-    { fecha:"2026-10-16", plan:"Setoda → Naoshima, tarde en la isla", duerme:"Naoshima", como:"Barco a Mihara, trenes a Uno, ferry a Miyanoura: 4 – 5,5 h" },
+    { fecha:"2026-10-16", plan:"Setoda → Naoshima, tarde en la isla", duerme:"Naoshima", como:"Barco a Mihara, trenes a Uno, ferry a Miyanoura: 4 – 5,5 h",
+      agenda:[ { hora:"12:15", texto:"Ferry Uno → Miyanoura, o el de 14:25" } ] },
     { fecha:"2026-10-17", plan:"Naoshima: museos y arquitectura. Salida a Kyoto", duerme:"Kyoto", como:"Ferry + JR Uno Line + Shinkansen desde Okayama: 3 – 4 h" },
     { fecha:"2026-10-18", plan:"Kyoto clásico: Gion, Higashiyama, Kiyomizu-dera", duerme:"Kyoto", como:"Tren local, taxi, caminata" },
     { fecha:"2026-10-19", plan:"Jardines y templos: Arashiyama o Philosopher's Path", duerme:"Kyoto", como:"Tren local, taxi, caminata" },
     { fecha:"2026-10-20", plan:"Kyoto → Osaka, tarde y noche en Osaka", duerme:"Osaka", como:"JR Special Rapid: 30–45 min" },
     { fecha:"2026-10-21", plan:"Osaka: Namba, Dotonbori, Umeda, cena", duerme:"Osaka", como:"Metro, caminata, taxi corto" },
-    { fecha:"2026-10-22", plan:"Osaka → Tokio y aeropuerto. Vuelo 22:00", duerme:"Avión", como:"Shinkansen 2 h 30 – 2 h 45 + traslado al aeropuerto 35–75 min" }
+    { fecha:"2026-10-22", plan:"Osaka → Tokio y aeropuerto. Vuelo 22:00", duerme:"Avión", como:"Shinkansen 2 h 30 – 2 h 45 + traslado al aeropuerto 35–75 min",
+      agenda:[ { hora:"18:30", texto:"Llegar a Haneda, meta entre 18:30 y 19:00" },
+               { hora:"22:00", texto:"Vuelo de regreso" } ] }
   ],
 
   hoteles: [
@@ -231,17 +244,17 @@ const VIAJE = {
         "Narita":{ url:"https://www.narita-airport.jp/en/access/train/", texto:"Accesos oficiales desde Narita" }
       },
       reserva:"Sin reserva", prioridad:"", enlace:"", enlaceTexto:"", doc:"" },
-    { fecha:"2026-10-14", tramo:"Tokio → Fukuyama → Onomichi", detalle:"Nozomi 25, Tokyo Station 10:30 → Fukuyama 14:03, Green Car, 2 adultos, ¥48.360. Tren y asientos definitivos llegan por mail de SmartEX desde un mes antes. Luego JR Sanyō Line a Onomichi, 20 min, sin reserva. No bajarse en Shin-Onomichi.",
+    { fecha:"2026-10-14", tramo:"Tokio → Fukuyama → Onomichi", hora:"10:30", detalle:"Nozomi 25, Tokyo Station 10:30 → Fukuyama 14:03, Green Car, 2 adultos, ¥48.360. Tren y asientos definitivos llegan por mail de SmartEX desde un mes antes. Luego JR Sanyō Line a Onomichi, 20 min, sin reserva. No bajarse en Shin-Onomichi.",
       reserva:"Comprado", prioridad:"Venta abierta desde el 14 de septiembre", enlace:"https://smart-ex.jp/en/index.php", enlaceTexto:"SmartEX · TOKYO → FUKUYAMA, 14 oct", doc:"https://drive.google.com/file/d/1uQ-FeaI3cpgpBEM8CSPulDLmmqlBKb3m/view" },
     { fecha:"2026-10-15", tramo:"Onomichi → Setoda en bicicleta", detalle:"Retiro en Onomichi, devolución en Setoda Port. Confirmar que la categoría de bicicleta admite devolución en otro terminal. Seguir la línea azul del Shimanami Kaido.",
       reserva:"Reservar bicicleta", prioridad:"Hacerlo ya", enlace:"https://www.asp-rsv.jp/onomichi-base/en/sp/index.cgi", enlaceTexto:"Reserva Onomichi Base", doc:"" },
-    { fecha:"2026-10-16", tramo:"Setoda → Naoshima", detalle:"Barco Setoda Port → Mihara Port, idealmente 08:15. Caminata 5–10 min a Mihara Station. Kodama a Okayama. JR Uno Line a Uno, 50–60 min. Ferry Uno → Miyanoura, 20 min: apuntar al de 12:15 o al de 14:25.",
+    { fecha:"2026-10-16", tramo:"Setoda → Naoshima", hora:"08:15", detalle:"Barco Setoda Port → Mihara Port, idealmente 08:15. Caminata 5–10 min a Mihara Station. Kodama a Okayama. JR Uno Line a Uno, 50–60 min. Ferry Uno → Miyanoura, 20 min: apuntar al de 12:15 o al de 14:25.",
       reserva:"Se compra en el momento", prioridad:"Revisar horarios 48 h antes", enlace:"https://shikokukisen.com/uno-miyanoura/", enlaceTexto:"Horarios Uno ↔ Miyanoura", doc:"" },
-    { fecha:"2026-10-17", tramo:"Naoshima → Kyoto", detalle:"Ferry Miyanoura → Uno por la tarde, referencias 14:55, 16:35 o 17:35. JR Uno Line a Okayama. Nozomi Okayama → Kyoto, cerca de 1 hora.",
+    { fecha:"2026-10-17", tramo:"Naoshima → Kyoto", hora:"14:55", detalle:"Ferry Miyanoura → Uno por la tarde, referencias 14:55, 16:35 o 17:35. JR Uno Line a Okayama. Nozomi Okayama → Kyoto, cerca de 1 hora.",
       reserva:"Opcional", prioridad:"", enlace:"https://smart-ex.jp/en/index.php", enlaceTexto:"SmartEX · OKAYAMA → KYOTO, 17 oct", doc:"" },
     { fecha:"2026-10-20", tramo:"Kyoto → Osaka", detalle:"JR Special Rapid desde Kyoto Station, unos 30 min. Pagar con IC card. Si el hotel queda en Namba, seguir en metro.",
       reserva:"Sin reserva", prioridad:"", enlace:"", enlaceTexto:"", doc:"" },
-    { fecha:"2026-10-22", tramo:"Osaka → Tokio → aeropuerto", detalle:"Nozomi desde Shin-Osaka, 2 h 30 – 2 h 45. Llegar a la estación 25–30 min antes. Meta de llegada al aeropuerto: entre 18:30 y 19:00 para el vuelo de las 22:00.",
+    { fecha:"2026-10-22", tramo:"Osaka → Tokio → aeropuerto", hora:"13:00", detalle:"Nozomi desde Shin-Osaka, 2 h 30 – 2 h 45. Llegar a la estación 25–30 min antes. Meta de llegada al aeropuerto: entre 18:30 y 19:00 para el vuelo de las 22:00.",
       segun:"aeropuertoSalida",
       opciones:{
         "Haneda":"Salir de Shin-Osaka entre 13:00 y 14:00. Bajar en Shinagawa y tomar Keikyu hacia Haneda: 25–35 min más caminatas y espera.",
@@ -464,11 +477,11 @@ const VIAJE = {
   document.getElementById("visor-cerrar").addEventListener("click", () => visor.close());
 
   document.addEventListener("click", e => {
-    const card = e.target.closest(".card[data-clave]");
+    const card = e.target.closest(".card[data-clave], .agenda [data-clave]");
     if (card && !e.target.closest("a")) abrirFicha(card.dataset.clave);
   });
   document.addEventListener("keydown", e => {
-    const card = e.target.closest && e.target.closest(".card[data-clave]");
+    const card = e.target.closest && e.target.closest(".card[data-clave], .agenda [data-clave]");
     if (card && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); abrirFicha(card.dataset.clave); }
   });
 
@@ -528,8 +541,51 @@ const VIAJE = {
   function tarjetaDia(x, destacado){
     return `<div class="card${destacado ? " choque" : ""}" style="${destacado ? "border-left-color:var(--shu)" : ""}">
       <h3>${esc(x.plan)}</h3>
-      <p class="meta">${esc(corto(x.fecha))} · duermen en ${esc(x.duerme)}</p>
-      <p class="meta">${esc(x.como)}</p></div>`;
+      <p class="meta">${esc(corto(x.fecha))} · ${dondeDuermen(x)}</p>
+      <p class="meta">${esc(x.como)}</p>${agendaDia(x)}</div>`;
+  }
+
+  /* ---------- Detalle de cada día ---------- */
+  // Hoteles de esa noche: la estadía cubre la noche si entra <= fecha < sale.
+  const hotelesNoche = f => VIAJE.hoteles.map((h,i) => ({ h, i })).filter(({h}) => h.entra <= f && f < h.sale);
+
+  function dondeDuermen(x){
+    const hs = hotelesNoche(x.fecha);
+    if (!hs.length) return "Duermen en " + esc(x.duerme);
+    return "Duermen en " + hs.map(({h,i}) => esc(h.nombre) + (choques.has(i) ? " (reserva duplicada)" : "")).join(" o ");
+  }
+
+  // Arma la agenda del día juntando hoteles, tramos, restaurantes y la lista
+  // "agenda" del día. Lo que no tiene hora se ordena en un lugar razonable
+  // (check-out temprano, check-in en la tarde) pero se muestra sin hora.
+  const minutos = h => { const m = /^(\d{1,2}):(\d{2})/.exec(h || ""); return m ? m[1]*60 + +m[2] : null; };
+  function itemsDia(x){
+    const it = [];
+    const add = (hora, orden, tipo, texto, clave) => {
+      const m = minutos(hora);
+      it.push({ hora: m === null ? "" : hora, orden: m === null ? orden : m, tipo, texto, clave });
+    };
+    VIAJE.hoteles.forEach((h,i) => {
+      const dup = choques.has(i) ? " (duplicada)" : "";
+      if (h.sale === x.fecha)  add(h.checkout, 7*60, "Check-out", h.nombre + dup, fichaHotel(h).clave);
+      if (h.entra === x.fecha) add(h.checkin, 15*60, "Check-in", h.nombre + dup, fichaHotel(h).clave);
+    });
+    VIAJE.transporte.filter(t => t.fecha === x.fecha).forEach(t =>
+      add(t.hora, 9*60, "Traslado", t.tramo, fichaTramo(t).clave));
+    VIAJE.comidas.filter(c => c.fecha === x.fecha).forEach(c =>
+      add(c.hora, 20*60, "Comida", c.nombre, fichaComida(c).clave));
+    (x.agenda || []).forEach(a => add(a.hora, 12*60, "", a.texto, ""));
+    return it.sort((a,b) => a.orden - b.orden);
+  }
+
+  function agendaDia(x){
+    const it = itemsDia(x);
+    if (!it.length) return "";
+    return `<ul class="agenda">` + it.map(e => `
+      <li${e.clave ? ` data-clave="${esc(e.clave)}" role="button" tabindex="0"` : ""}>
+        <span class="${e.hora ? "h" : "sin-h"}">${e.hora ? esc(e.hora) : "·"}</span>
+        <span>${e.tipo ? `<span class="tipo">${esc(e.tipo)} · </span>` : ""}<span class="que">${esc(e.texto)}</span></span>
+      </li>`).join("") + `</ul>`;
   }
 
   /* ---------- Panel: Itinerario ---------- */
@@ -542,8 +598,9 @@ const VIAJE = {
           <div class="fecha"><span class="num">${t.getDate()}</span><span class="dow">${DOW[t.getDay()]}</span></div>
           <div>
             <div class="plan">${esc(x.plan)}</div>
-            <div class="donde">Duermen en ${esc(x.duerme)}</div>
+            <div class="donde">${dondeDuermen(x)}</div>
             <div class="como">${esc(x.como)}</div>
+            ${agendaDia(x)}
           </div></div>`;
       }).join("");
   }

@@ -210,7 +210,10 @@ const VIAJE = {
     { fecha:"2026-10-15", plan:"Shimanami Kaido en bicicleta: Onomichi → Setoda", duerme:"Setoda", como:"30–35 km. Pedaleo 3–4 h, con paradas 5–6 h" },
     { fecha:"2026-10-16", plan:"Setoda → Naoshima, tarde en la isla", duerme:"Naoshima", como:"Barco a Mihara, trenes a Uno, ferry a Miyanoura: 4 – 5,5 h",
       agenda:[ { hora:"12:15", texto:"Ferry Uno → Miyanoura, o el de 14:25" } ] },
-    { fecha:"2026-10-17", plan:"Naoshima: museos y arquitectura. Salida a Kyoto", duerme:"Kyoto", como:"Ferry + JR Uno Line + Shinkansen desde Okayama: 3 – 4 h" },
+    { fecha:"2026-10-17", plan:"Naoshima: Chichu Art Museum y arquitectura. Salida a Kyoto", duerme:"Kyoto", como:"Ferry + JR Uno Line + Shinkansen desde Okayama: 3 – 4 h",
+      agenda:[ { hora:"13:30", tipo:"Visita", texto:"Chichu Art Museum",
+                 nota:"2 entradas generales, ¥5.400. Hay que entrar entre 13:25 y 14:00. Los QR están en el mail de Benesse Art Site y en su app.",
+                 doc:"https://drive.google.com/file/d/1DLq4n-yR8WJWD9ssbgmA67VLmEYOyzaE/view" } ] },
     { fecha:"2026-10-18", plan:"Kyoto clásico: Gion, Higashiyama, Kiyomizu-dera", duerme:"Kyoto", como:"Tren local, taxi, caminata" },
     { fecha:"2026-10-19", plan:"Jardines y templos: Arashiyama o Philosopher's Path", duerme:"Kyoto", como:"Tren local, taxi, caminata" },
     { fecha:"2026-10-20", plan:"Kyoto → Osaka, tarde y noche en Osaka", duerme:"Osaka", como:"JR Special Rapid: 30–45 min" },
@@ -250,7 +253,7 @@ const VIAJE = {
       reserva:"Reservar bicicleta", prioridad:"Hacerlo ya", enlace:"https://www.asp-rsv.jp/onomichi-base/en/sp/index.cgi", enlaceTexto:"Reserva Onomichi Base", doc:"" },
     { fecha:"2026-10-16", tramo:"Setoda → Naoshima", hora:"08:15", detalle:"Barco Setoda Port → Mihara Port, idealmente 08:15. Caminata 5–10 min a Mihara Station. Kodama a Okayama. JR Uno Line a Uno, 50–60 min. Ferry Uno → Miyanoura, 20 min: apuntar al de 12:15 o al de 14:25.",
       reserva:"Se compra en el momento", prioridad:"Revisar horarios 48 h antes", enlace:"https://shikokukisen.com/uno-miyanoura/", enlaceTexto:"Horarios Uno ↔ Miyanoura", doc:"" },
-    { fecha:"2026-10-17", tramo:"Naoshima → Kyoto", hora:"14:55", detalle:"Ferry Miyanoura → Uno por la tarde, referencias 14:55, 16:35 o 17:35. JR Uno Line a Okayama. Nozomi Okayama → Kyoto, cerca de 1 hora.",
+    { fecha:"2026-10-17", tramo:"Naoshima → Kyoto", hora:"16:35", detalle:"Ferry Miyanoura → Uno de las 16:35, o el de 17:35 si el museo se alarga. El de 14:55 no alcanza con la entrada al Chichu de las 13:30. JR Uno Line a Okayama. Nozomi Okayama → Kyoto, cerca de 1 hora.",
       reserva:"Opcional", prioridad:"", enlace:"https://smart-ex.jp/en/index.php", enlaceTexto:"SmartEX · OKAYAMA → KYOTO, 17 oct", doc:"" },
     { fecha:"2026-10-20", tramo:"Kyoto → Osaka", detalle:"JR Special Rapid desde Kyoto Station, unos 30 min. Pagar con IC card. Si el hotel queda en Namba, seguir en metro.",
       reserva:"Sin reserva", prioridad:"", enlace:"", enlaceTexto:"", doc:"" },
@@ -378,6 +381,8 @@ const VIAJE = {
     sub:corto(x.fecha), drive:enlacesDrive(x, "Pasaje en Drive") });
   const fichaComida = x => ficha({ clave:"comida|" + x.nombre + "|" + x.fecha, titulo:x.nombre,
     sub:(x.ciudad ? x.ciudad + " · " : "") + corto(x.fecha) + (x.hora ? " · " + x.hora : ""), drive:enlacesDrive(x, "Reserva en Drive") });
+  const fichaActividad = (dia, a) => ficha({ clave:"actividad|" + dia.fecha + "|" + a.texto, titulo:a.texto,
+    sub:corto(dia.fecha) + (a.hora ? " · " + a.hora : "") + (a.nota ? " · " + a.nota : ""), drive:enlacesDrive(a, "Entradas en Drive") });
   const attrFicha = f => `data-clave="${esc(f.clave)}" role="button" tabindex="0"`;
   const pistaDocs = f => `<p class="docs-hint" data-cuenta="${esc(f.clave)}">Documentos ›</p>`;
 
@@ -565,16 +570,19 @@ const VIAJE = {
       const m = minutos(hora);
       it.push({ hora: m === null ? "" : hora, orden: m === null ? orden : m, tipo, texto, clave });
     };
+    // Un check-in sin hora va después del último traslado del día: se llega y se entra.
+    const ultimoTraslado = Math.max(0, ...VIAJE.transporte.filter(t => t.fecha === x.fecha).map(t => minutos(t.hora) || 0));
     VIAJE.hoteles.forEach((h,i) => {
       const dup = choques.has(i) ? " (duplicada)" : "";
       if (h.sale === x.fecha)  add(h.checkout, 7*60, "Check-out", h.nombre + dup, fichaHotel(h).clave);
-      if (h.entra === x.fecha) add(h.checkin, 15*60, "Check-in", h.nombre + dup, fichaHotel(h).clave);
+      if (h.entra === x.fecha) add(h.checkin, Math.max(15*60, ultimoTraslado + 1), "Check-in", h.nombre + dup, fichaHotel(h).clave);
     });
     VIAJE.transporte.filter(t => t.fecha === x.fecha).forEach(t =>
       add(t.hora, 9*60, "Traslado", t.tramo, fichaTramo(t).clave));
     VIAJE.comidas.filter(c => c.fecha === x.fecha).forEach(c =>
       add(c.hora, 20*60, "Comida", c.nombre, fichaComida(c).clave));
-    (x.agenda || []).forEach(a => add(a.hora, 12*60, "", a.texto, ""));
+    (x.agenda || []).forEach(a => add(a.hora, 12*60, a.tipo || "", a.texto,
+      (a.doc || a.docs) ? fichaActividad(x, a).clave : ""));
     return it.sort((a,b) => a.orden - b.orden);
   }
 

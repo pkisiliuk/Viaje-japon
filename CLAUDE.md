@@ -33,7 +33,9 @@ explícitamente sobre el diseño o el comportamiento del sitio.
   entonces todas las opciones y deja el pendiente abierto.
 - `dias` — un objeto por día, en orden cronológico.
   Cada día puede tener `agenda`: una lista de `{ hora:"HH:MM", texto }`
-  para visitas, ferries, vuelos o lo que sea. El itinerario arma solo la
+  para visitas, ferries, vuelos o lo que sea. Opcionales: `tipo` ("Visita"),
+  `nota`, y `doc`/`docs` con las entradas en Drive; si tiene documentos, la
+  fila se abre al tocarla. El itinerario arma solo la
   agenda del día juntando esa lista con los check-in y check-out de los
   hoteles (`checkin`/`checkout` opcionales con la hora), los tramos (`hora`
   opcional) y los restaurantes (`hora`). También muestra en qué hotel

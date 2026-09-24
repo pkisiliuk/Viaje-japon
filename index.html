@@ -195,8 +195,8 @@ const VIAJE = {
     { fecha:"2026-10-10", plan:"Llegada a Tokio, paseo suave", duerme:"Tokio", como:"Haneda → hotel en Asakusa: 45–60 min" },
     { fecha:"2026-10-11", plan:"Tokio: Asakusa, Ginza, Marunouchi", duerme:"Tokio", como:"Metro y tren urbano" },
     { fecha:"2026-10-12", plan:"Diseño y arquitectura: Omotesando, Aoyama, Nezu Museum", duerme:"Tokio", como:"Metro, tren urbano, taxi corto" },
-    { fecha:"2026-10-13", plan:"Arte y barrios: Roppongi, teamLab, Daikanyama y Nakameguro", duerme:"Tokio", como:"Metro, tren urbano, taxi corto" },
-    { fecha:"2026-10-14", plan:"Tokio → Onomichi, tarde en Onomichi", duerme:"Onomichi", como:"Shinkansen a Fukuyama + tren local: 3 h 35 – 4 h 15" },
+    { fecha:"2026-10-13", plan:"Arte y barrios: Roppongi, teamLab, Daikanyama y Nakameguro. Cena 20:15 en Esprit, Ginza", duerme:"Tokio", como:"Metro, tren urbano, taxi corto" },
+    { fecha:"2026-10-14", plan:"Tokio → Onomichi, tarde en Onomichi", duerme:"Onomichi", como:"Nozomi 25 Tokyo 10:30 → Fukuyama 14:03, luego tren local 20 min" },
     { fecha:"2026-10-15", plan:"Shimanami Kaido en bicicleta: Onomichi → Setoda", duerme:"Setoda", como:"30–35 km. Pedaleo 3–4 h, con paradas 5–6 h" },
     { fecha:"2026-10-16", plan:"Setoda → Naoshima, tarde en la isla", duerme:"Naoshima", como:"Barco a Mihara, trenes a Uno, ferry a Miyanoura: 4 – 5,5 h" },
     { fecha:"2026-10-17", plan:"Naoshima: museos y arquitectura. Salida a Kyoto", duerme:"Kyoto", como:"Ferry + JR Uno Line + Shinkansen desde Okayama: 3 – 4 h" },
@@ -231,8 +231,8 @@ const VIAJE = {
         "Narita":{ url:"https://www.narita-airport.jp/en/access/train/", texto:"Accesos oficiales desde Narita" }
       },
       reserva:"Sin reserva", prioridad:"", enlace:"", enlaceTexto:"", doc:"" },
-    { fecha:"2026-10-14", tramo:"Tokio → Fukuyama → Onomichi", detalle:"Nozomi directo Tokyo Station → Fukuyama, 3 h 35 – 3 h 50, asiento reservado. Salir entre 08:00 y 09:00. Luego JR Sanyō Line a Onomichi, 20 min, sin reserva. No bajarse en Shin-Onomichi.",
-      reserva:"Comprar en SmartEX", prioridad:"Venta abierta desde el 14 de septiembre", enlace:"https://smart-ex.jp/en/index.php", enlaceTexto:"SmartEX · TOKYO → FUKUYAMA, 14 oct", doc:"" },
+    { fecha:"2026-10-14", tramo:"Tokio → Fukuyama → Onomichi", detalle:"Nozomi 25, Tokyo Station 10:30 → Fukuyama 14:03, Green Car, 2 adultos, ¥48.360. Tren y asientos definitivos llegan por mail de SmartEX desde un mes antes. Luego JR Sanyō Line a Onomichi, 20 min, sin reserva. No bajarse en Shin-Onomichi.",
+      reserva:"Comprado", prioridad:"Venta abierta desde el 14 de septiembre", enlace:"https://smart-ex.jp/en/index.php", enlaceTexto:"SmartEX · TOKYO → FUKUYAMA, 14 oct", doc:"https://drive.google.com/file/d/1uQ-FeaI3cpgpBEM8CSPulDLmmqlBKb3m/view" },
     { fecha:"2026-10-15", tramo:"Onomichi → Setoda en bicicleta", detalle:"Retiro en Onomichi, devolución en Setoda Port. Confirmar que la categoría de bicicleta admite devolución en otro terminal. Seguir la línea azul del Shimanami Kaido.",
       reserva:"Reservar bicicleta", prioridad:"Hacerlo ya", enlace:"https://www.asp-rsv.jp/onomichi-base/en/sp/index.cgi", enlaceTexto:"Reserva Onomichi Base", doc:"" },
     { fecha:"2026-10-16", tramo:"Setoda → Naoshima", detalle:"Barco Setoda Port → Mihara Port, idealmente 08:15. Caminata 5–10 min a Mihara Station. Kodama a Okayama. JR Uno Line a Uno, 50–60 min. Ferry Uno → Miyanoura, 20 min: apuntar al de 12:15 o al de 14:25.",
@@ -251,7 +251,11 @@ const VIAJE = {
   ],
 
   // Restaurantes: agregar acá a medida que reserven.
-  comidas: [],
+  comidas: [
+    { nombre:"Esprit C. Kei Ginza", ciudad:"Tokio", fecha:"2026-10-13", hora:"20:15",
+      nota:"Mesa para 2, reservada en TableCheck. La cuenta se carga sola a la tarjeta registrada. Ginza 7-8-17, Toraya Ginza Building, piso 11. Tel. 03-6274-6611.",
+      doc:"https://drive.google.com/file/d/1H37blEpOvR_etb0Tva-HE3YL4lqogJ6L/view" }
+  ],
 
   pendientes: [
     { id:"smartex-cuenta", texto:"Crear cuenta en SmartEX y comprobar que la tarjeta pasa 3-D Secure", cuando:"Ahora" },

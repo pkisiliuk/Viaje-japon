@@ -120,6 +120,37 @@
   .vacio{background:var(--card);border:1px dashed var(--line);border-radius:var(--radius);
     padding:26px 18px;text-align:center;color:var(--ink-2);font-size:14.5px}
 
+  /* ---------- Documentos de cada tarjeta ---------- */
+  .card.abre{cursor:pointer}
+  .card.abre:focus-visible{outline:2px solid var(--sea);outline-offset:1px}
+  .card .docs-hint{font-size:13px;color:var(--sea);margin:9px 0 0}
+  dialog.hoja{width:min(100%,var(--max));max-width:100%;max-height:88vh;margin:auto auto 0;
+    border:0;border-radius:8px 8px 0 0;padding:18px 18px calc(22px + env(safe-area-inset-bottom,0px));
+    background:var(--card);color:var(--ink);overflow-y:auto}
+  dialog.hoja::backdrop{background:rgba(21,37,60,.45)}
+  .hoja .cerrar{float:right;background:none;border:0;font:inherit;font-size:14px;color:var(--sea);
+    padding:4px 0 8px 12px;cursor:pointer}
+  .hoja h4{font-size:12.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+    color:var(--ink-2);margin:20px 0 6px}
+  .capturas{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
+  .captura{position:relative}
+  .captura button.ver{display:block;width:100%;padding:0;border:1px solid var(--line);
+    border-radius:var(--radius);background:var(--paper);cursor:pointer;aspect-ratio:3/4;overflow:hidden}
+  .captura img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+  .captura button.borrar{margin-top:3px;background:none;border:0;font:inherit;font-size:12px;
+    color:var(--shu);padding:2px 0;cursor:pointer}
+  .agregar{display:inline-block;margin-top:12px;padding:10px 14px;border:1px solid var(--sea);
+    border-radius:var(--radius);color:var(--sea);font-size:14.5px;cursor:pointer}
+  .agregar input{display:none}
+  .hoja .nota{font-size:12.5px;color:var(--ink-2);margin:10px 0 0}
+  #visor{width:100%;height:100%;max-width:none;max-height:none;margin:0;border:0;background:#0B1422;
+    overflow:auto;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+  #visor::backdrop{background:#0B1422}
+  #visor img{max-width:100%;height:auto;display:block}
+  #visor button{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));right:12px;
+    background:rgba(255,255,255,.9);border:0;border-radius:3px;font:inherit;font-size:14px;
+    padding:7px 11px;color:var(--ink);cursor:pointer}
+
   footer{max-width:var(--max);margin:0 auto;padding:22px 18px 40px;
     font-size:12.5px;color:var(--ink-2);border-top:1px solid var(--line)}
   @media (prefers-reduced-motion:no-preference){.dia.hoy{transition:none}}
@@ -164,8 +195,8 @@ const VIAJE = {
     { fecha:"2026-10-10", plan:"Llegada a Tokio, paseo suave", duerme:"Tokio", como:"Haneda → hotel en Asakusa: 45–60 min" },
     { fecha:"2026-10-11", plan:"Tokio: Asakusa, Ginza, Marunouchi", duerme:"Tokio", como:"Metro y tren urbano" },
     { fecha:"2026-10-12", plan:"Diseño y arquitectura: Omotesando, Aoyama, Nezu Museum", duerme:"Tokio", como:"Metro, tren urbano, taxi corto" },
-    { fecha:"2026-10-13", plan:"Arte y barrios: Roppongi, teamLab, Daikanyama y Nakameguro", duerme:"Tokio", como:"Metro, tren urbano, taxi corto" },
-    { fecha:"2026-10-14", plan:"Tokio → Onomichi, tarde en Onomichi", duerme:"Onomichi", como:"Shinkansen a Fukuyama + tren local: 3 h 35 – 4 h 15" },
+    { fecha:"2026-10-13", plan:"Arte y barrios: Roppongi, teamLab, Daikanyama y Nakameguro. Cena 20:15 en Esprit, Ginza", duerme:"Tokio", como:"Metro, tren urbano, taxi corto" },
+    { fecha:"2026-10-14", plan:"Tokio → Onomichi, tarde en Onomichi", duerme:"Onomichi", como:"Nozomi 25 Tokyo 10:30 → Fukuyama 14:03, luego tren local 20 min" },
     { fecha:"2026-10-15", plan:"Shimanami Kaido en bicicleta: Onomichi → Setoda", duerme:"Setoda", como:"30–35 km. Pedaleo 3–4 h, con paradas 5–6 h" },
     { fecha:"2026-10-16", plan:"Setoda → Naoshima, tarde en la isla", duerme:"Naoshima", como:"Barco a Mihara, trenes a Uno, ferry a Miyanoura: 4 – 5,5 h" },
     { fecha:"2026-10-17", plan:"Naoshima: museos y arquitectura. Salida a Kyoto", duerme:"Kyoto", como:"Ferry + JR Uno Line + Shinkansen desde Okayama: 3 – 4 h" },
@@ -200,8 +231,8 @@ const VIAJE = {
         "Narita":{ url:"https://www.narita-airport.jp/en/access/train/", texto:"Accesos oficiales desde Narita" }
       },
       reserva:"Sin reserva", prioridad:"", enlace:"", enlaceTexto:"", doc:"" },
-    { fecha:"2026-10-14", tramo:"Tokio → Fukuyama → Onomichi", detalle:"Nozomi directo Tokyo Station → Fukuyama, 3 h 35 – 3 h 50, asiento reservado. Salir entre 08:00 y 09:00. Luego JR Sanyō Line a Onomichi, 20 min, sin reserva. No bajarse en Shin-Onomichi.",
-      reserva:"Comprar en SmartEX", prioridad:"Venta abierta desde el 14 de septiembre", enlace:"https://smart-ex.jp/en/index.php", enlaceTexto:"SmartEX · TOKYO → FUKUYAMA, 14 oct", doc:"" },
+    { fecha:"2026-10-14", tramo:"Tokio → Fukuyama → Onomichi", detalle:"Nozomi 25, Tokyo Station 10:30 → Fukuyama 14:03, Green Car, 2 adultos, ¥48.360. Tren y asientos definitivos llegan por mail de SmartEX desde un mes antes. Luego JR Sanyō Line a Onomichi, 20 min, sin reserva. No bajarse en Shin-Onomichi.",
+      reserva:"Comprado", prioridad:"Venta abierta desde el 14 de septiembre", enlace:"https://smart-ex.jp/en/index.php", enlaceTexto:"SmartEX · TOKYO → FUKUYAMA, 14 oct", doc:"https://drive.google.com/file/d/1uQ-FeaI3cpgpBEM8CSPulDLmmqlBKb3m/view" },
     { fecha:"2026-10-15", tramo:"Onomichi → Setoda en bicicleta", detalle:"Retiro en Onomichi, devolución en Setoda Port. Confirmar que la categoría de bicicleta admite devolución en otro terminal. Seguir la línea azul del Shimanami Kaido.",
       reserva:"Reservar bicicleta", prioridad:"Hacerlo ya", enlace:"https://www.asp-rsv.jp/onomichi-base/en/sp/index.cgi", enlaceTexto:"Reserva Onomichi Base", doc:"" },
     { fecha:"2026-10-16", tramo:"Setoda → Naoshima", detalle:"Barco Setoda Port → Mihara Port, idealmente 08:15. Caminata 5–10 min a Mihara Station. Kodama a Okayama. JR Uno Line a Uno, 50–60 min. Ferry Uno → Miyanoura, 20 min: apuntar al de 12:15 o al de 14:25.",
@@ -220,7 +251,11 @@ const VIAJE = {
   ],
 
   // Restaurantes: agregar acá a medida que reserven.
-  comidas: [],
+  comidas: [
+    { nombre:"Esprit C. Kei Ginza", ciudad:"Tokio", fecha:"2026-10-13", hora:"20:15",
+      nota:"Mesa para 2, reservada en TableCheck. La cuenta se carga sola a la tarjeta registrada. Ginza 7-8-17, Toraya Ginza Building, piso 11. Tel. 03-6274-6611.",
+      doc:"https://drive.google.com/file/d/1H37blEpOvR_etb0Tva-HE3YL4lqogJ6L/view" }
+  ],
 
   pendientes: [
     { id:"smartex-cuenta", texto:"Crear cuenta en SmartEX y comprobar que la tarjeta pasa 3-D Secure", cuando:"Ahora" },
@@ -271,6 +306,9 @@ const VIAJE = {
 
 <footer id="pie"></footer>
 
+<dialog class="hoja" id="hoja"></dialog>
+<dialog id="visor"><button type="button" id="visor-cerrar">Cerrar</button><img alt=""></dialog>
+
 <script>
 (function(){
   const $ = s => document.querySelector(s);
@@ -311,6 +349,128 @@ const VIAJE = {
   let hechos = {};
   try { hechos = JSON.parse(localStorage.getItem("japon-pendientes") || "{}"); } catch(e) { hechos = {}; }
   const guardar = () => { try { localStorage.setItem("japon-pendientes", JSON.stringify(hechos)); } catch(e){} };
+
+  /* ---------- Documentos de cada tarjeta ---------- */
+  // Cada hotel, tramo y restaurante tiene una "ficha" con sus enlaces de Drive
+  // y las capturas guardadas en este celular. La clave une ambas cosas.
+  const FICHAS = {};
+  const enlacesDrive = (x, texto) => [
+    ...(x.doc ? [{ nombre:texto, url:x.doc }] : []),
+    ...(x.docs || []).filter(e => e.url)
+  ];
+  const ficha = f => (FICHAS[f.clave] = f);
+  const fichaHotel = x => ficha({ clave:"hotel|" + x.nombre + "|" + x.entra, titulo:x.nombre,
+    sub:x.ciudad + " · " + corto(x.entra) + " al " + corto(x.sale), drive:enlacesDrive(x, "Reserva en Drive") });
+  const fichaTramo = x => ficha({ clave:"tramo|" + x.fecha + "|" + x.tramo, titulo:x.tramo,
+    sub:corto(x.fecha), drive:enlacesDrive(x, "Pasaje en Drive") });
+  const fichaComida = x => ficha({ clave:"comida|" + x.nombre + "|" + x.fecha, titulo:x.nombre,
+    sub:(x.ciudad ? x.ciudad + " · " : "") + corto(x.fecha) + (x.hora ? " · " + x.hora : ""), drive:enlacesDrive(x, "Reserva en Drive") });
+  const attrFicha = f => `data-clave="${esc(f.clave)}" role="button" tabindex="0"`;
+  const pistaDocs = f => `<p class="docs-hint" data-cuenta="${esc(f.clave)}">Documentos ›</p>`;
+
+  // Capturas: se guardan en el navegador de este celular (IndexedDB).
+  // No se suben a ningún lado, así que funcionan sin señal.
+  const Capturas = (() => {
+    let db;
+    const conectar = () => db || (db = new Promise((ok, mal) => {
+      const r = indexedDB.open("japon-documentos", 1);
+      r.onupgradeneeded = () => r.result.createObjectStore("capturas", { keyPath:"id", autoIncrement:true })
+        .createIndex("clave", "clave");
+      r.onsuccess = () => ok(r.result);
+      r.onerror = () => mal(r.error);
+    }));
+    const tx = (modo, fn) => conectar().then(base => new Promise((ok, mal) => {
+      const t = base.transaction("capturas", modo);
+      const req = fn(t.objectStore("capturas"));
+      t.oncomplete = () => ok(req.result);
+      t.onerror = t.onabort = () => mal(t.error);
+    }));
+    return {
+      lista: clave => tx("readonly", s => s.index("clave").getAll(clave)),
+      todas: () => tx("readonly", s => s.getAll()),
+      agregar: (clave, archivo) => tx("readwrite", s => s.add({ clave, blob:archivo, nombre:archivo.name, fecha:Date.now() })),
+      borrar: id => tx("readwrite", s => s.delete(id))
+    };
+  })();
+
+  // Actualiza el "Documentos ›" de cada tarjeta con cuántos hay.
+  function contarDocs(){
+    const pistas = document.querySelectorAll("[data-cuenta]");
+    if (!pistas.length) return;
+    Capturas.todas().catch(() => []).then(todas => pistas.forEach(p => {
+      const f = FICHAS[p.dataset.cuenta];
+      const n = f.drive.length + todas.filter(c => c.clave === f.clave).length;
+      p.textContent = n ? `Documentos (${n}) ›` : "Agregar documentos ›";
+    }));
+  }
+
+  const hoja = document.getElementById("hoja");
+  const visor = document.getElementById("visor");
+  let urls = [];
+  const soltarUrls = () => { urls.forEach(u => URL.revokeObjectURL(u)); urls = []; };
+
+  async function abrirFicha(clave){
+    const f = FICHAS[clave];
+    if (!f) return;
+    let capturas = [], sinGuardar = false;
+    try { capturas = await Capturas.lista(clave); } catch(e) { sinGuardar = true; }
+    soltarUrls();
+
+    const drive = f.drive.length
+      ? `<div class="links">` + f.drive.map(e =>
+          `<a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(e.nombre)}</a>`).join("") + `</div>`
+      : `<p class="meta">Sin enlace todavía. Se agrega en el campo <code>doc</code> del archivo.</p>`;
+
+    const fotos = sinGuardar
+      ? `<p class="meta">Este navegador no deja guardar capturas (¿modo privado?).</p>`
+      : (capturas.length ? `<div class="capturas">` + capturas.map(c => {
+          const u = URL.createObjectURL(c.blob); urls.push(u);
+          return `<div class="captura">
+            <button type="button" class="ver" data-ver="${u}" aria-label="Ver ${esc(c.nombre || "captura")}"><img src="${u}" alt=""></button>
+            <button type="button" class="borrar" data-borrar="${c.id}">Borrar</button></div>`;
+        }).join("") + `</div>` : `<p class="meta">Todavía no hay capturas en este celular.</p>`) +
+        `<label class="agregar">Agregar captura<input type="file" accept="image/*" multiple data-agregar="${esc(clave)}"></label>
+         <p class="nota">Las capturas quedan guardadas solo en este celular y se ven sin señal. No se suben a internet ni al repositorio, así que cada uno tiene que agregar las suyas.</p>`;
+
+    hoja.innerHTML = `<button type="button" class="cerrar" data-cerrar>Cerrar</button>
+      <h3>${esc(f.titulo)}</h3><p class="meta">${esc(f.sub)}</p>
+      <h4>Capturas</h4>${fotos}
+      <h4>En Drive</h4>${drive}`;
+    hoja.dataset.clave = clave;
+    if (!hoja.open) hoja.showModal();
+  }
+
+  hoja.addEventListener("click", async e => {
+    if (e.target === hoja || e.target.closest("[data-cerrar]")) return hoja.close();
+    const ver = e.target.closest("[data-ver]");
+    if (ver) { visor.querySelector("img").src = ver.dataset.ver; visor.showModal(); return; }
+    const borrar = e.target.closest("[data-borrar]");
+    if (borrar && confirm("¿Borrar esta captura de este celular?")) {
+      await Capturas.borrar(Number(borrar.dataset.borrar));
+      abrirFicha(hoja.dataset.clave); contarDocs();
+    }
+  });
+  hoja.addEventListener("change", async e => {
+    const input = e.target.closest("[data-agregar]");
+    if (!input || !input.files.length) return;
+    try {
+      for (const archivo of input.files) await Capturas.agregar(input.dataset.agregar, archivo);
+      // Pide que el navegador no borre lo guardado cuando falta espacio.
+      if (navigator.storage && navigator.storage.persist) navigator.storage.persist();
+    } catch(err) { alert("No se pudo guardar la captura en este celular."); }
+    abrirFicha(input.dataset.agregar); contarDocs();
+  });
+  hoja.addEventListener("close", soltarUrls);
+  document.getElementById("visor-cerrar").addEventListener("click", () => visor.close());
+
+  document.addEventListener("click", e => {
+    const card = e.target.closest(".card[data-clave]");
+    if (card && !e.target.closest("a")) abrirFicha(card.dataset.clave);
+  });
+  document.addEventListener("keydown", e => {
+    const card = e.target.closest && e.target.closest(".card[data-clave]");
+    if (card && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); abrirFicha(card.dataset.clave); }
+  });
 
   /* ---------- Panel: Hoy ---------- */
   function panelHoy(){
@@ -396,14 +556,14 @@ const VIAJE = {
         <p>Las reservas marcadas en rojo ocupan las mismas noches. Conviene cancelar una de cada par mientras la cancelación siga siendo gratis.</p></div>`;
     }
     h += VIAJE.hoteles.map((x,i) => `
-      <div class="card${choques.has(i) ? " choque" : ""}">
+      <div class="card abre${choques.has(i) ? " choque" : ""}" ${attrFicha(fichaHotel(x))}>
         <div class="fila">
           <h3>${esc(x.nombre)}</h3>
           <span class="precio">${esc(x.precio)}</span>
         </div>
         <p class="meta">${esc(x.ciudad)} · ${esc(corto(x.entra))} al ${esc(corto(x.sale))} · ${dias(x.entra,x.sale)} ${dias(x.entra,x.sale) === 1 ? "noche" : "noches"}</p>
         <span class="tag ${choques.has(i) ? "alerta" : "ok"}">${choques.has(i) ? "Se superpone con otra reserva" : esc(x.estado)}</span>
-        ${x.doc ? `<p class="meta" style="margin-top:9px"><a href="${esc(x.doc)}" target="_blank" rel="noopener">Ver reserva</a></p>` : ""}
+        ${pistaDocs(fichaHotel(x))}
       </div>`).join("");
     return h;
   }
@@ -440,14 +600,14 @@ const VIAJE = {
   function tarjetaTramo(x){
     const listo = comprado(x);
     const etiqueta = listo ? (/^comprad/i.test(x.reserva) ? x.reserva : "Comprado") : x.reserva;
-    return `<div class="card">
+    return `<div class="card abre" ${attrFicha(fichaTramo(x))}>
       <div class="fila"><h3>${esc(x.tramo)}</h3><span class="precio">${esc(corto(x.fecha))}</span></div>
       <p class="meta" style="margin-top:6px">${esc(x.detalle)}</p>
       ${variantes(x)}
       <span class="tag ${!listo && /SmartEX|Reservar/.test(x.reserva) ? "alerta" : "ok"}">${esc(etiqueta)}</span>
       ${x.prioridad && !listo ? `<p class="meta" style="margin-top:7px">${esc(x.prioridad)}</p>` : ""}
       ${enlacesTramo(x)}
-      ${x.doc ? `<p class="meta" style="margin-top:4px"><a href="${esc(x.doc)}" target="_blank" rel="noopener">Ver pasaje</a></p>` : ""}
+      ${pistaDocs(fichaTramo(x))}
     </div>`;
   }
   function panelTransporte(){
@@ -465,11 +625,11 @@ const VIAJE = {
       return h;
     }
     h += VIAJE.comidas.map(x => `
-      <div class="card">
+      <div class="card abre" ${attrFicha(fichaComida(x))}>
         <div class="fila"><h3>${esc(x.nombre)}</h3><span class="precio">${esc(corto(x.fecha))}</span></div>
         <p class="meta">${esc(x.ciudad || "")}${x.hora ? " · " + esc(x.hora) : ""}</p>
         ${x.nota ? `<p class="meta">${esc(x.nota)}</p>` : ""}
-        ${x.doc ? `<p class="meta" style="margin-top:8px"><a href="${esc(x.doc)}" target="_blank" rel="noopener">Ver reserva</a></p>` : ""}
+        ${pistaDocs(fichaComida(x))}
       </div>`).join("");
     return h;
   }
@@ -511,6 +671,7 @@ const VIAJE = {
       el.hidden = !activo;
       if (activo) el.innerHTML = p.render();
     });
+    contarDocs();
     document.querySelectorAll("#tabs button").forEach(b =>
       b.setAttribute("aria-selected", b.dataset.p === id));
     window.scrollTo({ top:0 });

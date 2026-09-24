@@ -199,9 +199,13 @@ const VIAJE = {
   ],
 
   dias: [
-    { fecha:"2026-10-08", plan:"Vuelo Santiago → Japón", duerme:"Avión", como:"Vuelo internacional" },
-    { fecha:"2026-10-09", plan:"En tránsito", duerme:"Avión", como:"Vuelo y conexión" },
-    { fecha:"2026-10-10", plan:"Llegada a Tokio, paseo suave", duerme:"Tokio", como:"Haneda → hotel en Asakusa: 45–60 min" },
+    { fecha:"2026-10-08", plan:"Vuelo Santiago → Sídney", duerme:"Avión", como:"Qantas desde el Terminal 2 de Santiago",
+      agenda:[ { hora:"10:10", texto:"Llegar al aeropuerto de Santiago, Terminal 2 (3 h antes)" } ] },
+    { fecha:"2026-10-09", plan:"Escala en Sídney y vuelo a Tokio", duerme:"Avión", como:"Llegan a Sídney 17:40, salen 21:30: 3 h 50 de escala",
+      agenda:[ { hora:"17:40", texto:"Llegada a Sídney, Terminal 1" } ] },
+    { fecha:"2026-10-10", plan:"Llegada a Haneda de madrugada, paseo suave", duerme:"Tokio", como:"Haneda → hotel en Asakusa: 45–60 min",
+      agenda:[ { hora:"05:25", texto:"Llegada a Haneda, Terminal 3" },
+               { texto:"Dejar las maletas en el hotel: a esa hora todavía no se puede hacer check-in" } ] },
     { fecha:"2026-10-11", plan:"Tokio: Asakusa, Ginza, Marunouchi", duerme:"Tokio", como:"Metro y tren urbano" },
     { fecha:"2026-10-12", plan:"Diseño y arquitectura: Omotesando, Aoyama, Nezu Museum", duerme:"Tokio", como:"Metro, tren urbano, taxi corto" },
     { fecha:"2026-10-13", plan:"Arte y barrios: Roppongi, teamLab, Daikanyama y Nakameguro", duerme:"Tokio", como:"Metro, tren urbano, taxi corto" },
@@ -219,8 +223,7 @@ const VIAJE = {
     { fecha:"2026-10-20", plan:"Kyoto → Osaka, tarde y noche en Osaka", duerme:"Osaka", como:"JR Special Rapid: 30–45 min" },
     { fecha:"2026-10-21", plan:"Osaka: Namba, Dotonbori, Umeda, cena", duerme:"Osaka", como:"Metro, caminata, taxi corto" },
     { fecha:"2026-10-22", plan:"Osaka → Tokio y aeropuerto. Vuelo 22:00", duerme:"Avión", como:"Shinkansen 2 h 30 – 2 h 45 + traslado al aeropuerto 35–75 min",
-      agenda:[ { hora:"18:30", texto:"Llegar a Haneda, meta entre 18:30 y 19:00" },
-               { hora:"22:00", texto:"Vuelo de regreso" } ] }
+      agenda:[ { hora:"18:30", texto:"Llegar a Haneda, Terminal 3. Meta entre 18:30 y 19:00" } ] }
   ],
 
   hoteles: [
@@ -235,6 +238,12 @@ const VIAJE = {
   ],
 
   transporte: [
+    { fecha:"2026-10-08", tramo:"Santiago → Sídney", tipo:"Vuelo", hora:"13:10", detalle:"QF28, Qantas, económica. Santiago T2 13:10 → Sídney T1 el viernes 9 a las 17:40, 14 h 30 de vuelo. Embarque 12:25.",
+      reserva:"Comprado", prioridad:"", enlace:"", enlaceTexto:"", doc:"https://drive.google.com/file/d/1PZSxAVxwRM1N3F_NDAQOKPyg6lixrWCy/view",
+      docs:[ { nombre:"Pasajeros y asientos", url:"https://drive.google.com/file/d/1MpDNmQiZDz0fKOySYK4gcU016-hc-x0q/view" } ] },
+    { fecha:"2026-10-09", tramo:"Sídney → Tokio (Haneda)", tipo:"Vuelo", hora:"21:30", detalle:"QF25, Qantas, económica. Sídney T1 21:30 → Haneda T3 el sábado 10 a las 05:25, 9 h 55 de vuelo. Embarque 20:45.",
+      reserva:"Comprado", prioridad:"", enlace:"", enlaceTexto:"", doc:"https://drive.google.com/file/d/1PUYrwuFW6QI9vWOcdE0NKCMfS1ZNu9Ou/view",
+      docs:[ { nombre:"Pasajeros y asientos", url:"https://drive.google.com/file/d/1UDRpXotO4IfTFQ8n8Y8VYReIElBTJaD2/view" } ] },
     { fecha:"2026-10-10", tramo:"Aeropuerto → Tokio", detalle:"Pagar con Suica o PASMO. Agregar Suica al Wallet del iPhone antes de viajar, una tarjeta por persona.",
       segun:"aeropuertoLlegada",
       opciones:{
@@ -260,10 +269,16 @@ const VIAJE = {
     { fecha:"2026-10-22", tramo:"Osaka → Tokio → aeropuerto", hora:"13:00", detalle:"Nozomi desde Shin-Osaka, 2 h 30 – 2 h 45. Llegar a la estación 25–30 min antes. Meta de llegada al aeropuerto: entre 18:30 y 19:00 para el vuelo de las 22:00.",
       segun:"aeropuertoSalida",
       opciones:{
-        "Haneda":"Salir de Shin-Osaka entre 13:00 y 14:00. Bajar en Shinagawa y tomar Keikyu hacia Haneda: 25–35 min más caminatas y espera.",
+        "Haneda":"Salir de Shin-Osaka entre 13:00 y 14:00. Bajar en Shinagawa y tomar Keikyu hacia Haneda Terminal 3: 25–35 min más caminatas y espera.",
         "Narita":"Salir de Shin-Osaka entre 12:00 y 13:00. Bajar en Tokyo Station y tomar Narita Express con asiento reservado: cerca de 60 min más conexión. Usar el margen más conservador."
       },
-      reserva:"Comprar en SmartEX", prioridad:"Venta abierta desde el 22 de septiembre", enlace:"https://smart-ex.jp/en/index.php", enlaceTexto:"SmartEX · SHIN-OSAKA → SHINAGAWA, 22 oct", doc:"" }
+      reserva:"Comprar en SmartEX", prioridad:"Venta abierta desde el 22 de septiembre", enlace:"https://smart-ex.jp/en/index.php", enlaceTexto:"SmartEX · SHIN-OSAKA → SHINAGAWA, 22 oct", doc:"" },
+    { fecha:"2026-10-22", tramo:"Tokio (Haneda) → Sídney", tipo:"Vuelo", hora:"22:00", detalle:"QF60, Qantas, económica. Haneda T3 22:00 → Sídney T1 el viernes 23 a las 09:55, 9 h 55 de vuelo. Embarque 21:15.",
+      reserva:"Comprado", prioridad:"", enlace:"", enlaceTexto:"", doc:"https://drive.google.com/file/d/1B-bJ5NfwzBUKxTFP_uS1qQAmHlIzWDIj/view",
+      docs:[ { nombre:"Pasajeros y asientos", url:"https://drive.google.com/file/d/1MjcIgWuyFgf_yEtgTsO_HUdBapdy0rzX/view" } ] },
+    { fecha:"2026-10-23", tramo:"Sídney → Santiago", tipo:"Vuelo", hora:"12:20", detalle:"QF27, Qantas, económica. Sídney T1 12:20 → Santiago T2 el mismo viernes 23 a las 10:50, 12 h 30 de vuelo. Embarque 11:35. Escala en Sídney de 2 h 25.",
+      reserva:"Comprado", prioridad:"", enlace:"", enlaceTexto:"", doc:"https://drive.google.com/file/d/1bn_s1QmLgcYBao8IWOkvUtB8Z1hShOKH/view",
+      docs:[ { nombre:"Pasajeros y asientos", url:"https://drive.google.com/file/d/1s5uFfz1J5PCK7oTt5u7UVQedRRIqoa8S/view" } ] }
   ],
 
   // Restaurantes: agregar acá a medida que reserven.
@@ -578,7 +593,7 @@ const VIAJE = {
       if (h.entra === x.fecha) add(h.checkin, Math.max(15*60, ultimoTraslado + 1), "Check-in", h.nombre + dup, fichaHotel(h).clave);
     });
     VIAJE.transporte.filter(t => t.fecha === x.fecha).forEach(t =>
-      add(t.hora, 9*60, "Traslado", t.tramo, fichaTramo(t).clave));
+      add(t.hora, 9*60, t.tipo || "Traslado", t.tramo, fichaTramo(t).clave));
     VIAJE.comidas.filter(c => c.fecha === x.fecha).forEach(c =>
       add(c.hora, 20*60, "Comida", c.nombre, fichaComida(c).clave));
     (x.agenda || []).forEach(a => add(a.hora, 12*60, a.tipo || "", a.texto,

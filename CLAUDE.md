@@ -32,6 +32,12 @@ explícitamente sobre el diseño o el comportamiento del sitio.
   qué aeropuerto llegan. Vacío (`""`) significa sin decidir: el sitio muestra
   entonces todas las opciones y deja el pendiente abierto.
 - `dias` — un objeto por día, en orden cronológico.
+  Cada día puede tener `agenda`: una lista de `{ hora:"HH:MM", texto }`
+  para visitas, ferries, vuelos o lo que sea. El itinerario arma solo la
+  agenda del día juntando esa lista con los check-in y check-out de los
+  hoteles (`checkin`/`checkout` opcionales con la hora), los tramos (`hora`
+  opcional) y los restaurantes (`hora`). También muestra en qué hotel
+  duermen. Lo que no tiene hora aparece con un punto y se ordena solo.
 - `hoteles` — el sitio detecta solo las estadías que se superponen y las
   marca. No hace falta señalarlas a mano.
 - `transporte` — tramos. Si un tramo depende de una decisión, lleva `segun`

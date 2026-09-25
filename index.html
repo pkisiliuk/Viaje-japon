@@ -222,8 +222,10 @@ const VIAJE = {
     { fecha:"2026-10-19", plan:"Jardines y templos: Arashiyama o Philosopher's Path", duerme:"Kyoto", como:"Tren local, taxi, caminata" },
     { fecha:"2026-10-20", plan:"Kyoto → Osaka, tarde y noche en Osaka", duerme:"Osaka", como:"JR Special Rapid: 30–45 min" },
     { fecha:"2026-10-21", plan:"Osaka: Namba, Dotonbori, Umeda, cena", duerme:"Osaka", como:"Metro, caminata, taxi corto" },
-    { fecha:"2026-10-22", plan:"Osaka → Tokio y aeropuerto. Vuelo 22:00", duerme:"Avión", como:"Shinkansen 2 h 30 – 2 h 45 + traslado al aeropuerto 35–75 min",
-      agenda:[ { hora:"18:30", texto:"Llegar a Haneda, Terminal 3. Meta entre 18:30 y 19:00" } ] }
+    { fecha:"2026-10-22", plan:"Osaka → Tokio y aeropuerto. Vuelo 22:00", duerme:"Avión", como:"Nozomi 434 Shin-Osaka 15:24 → Shinagawa 17:46, luego Keikyu a Haneda 25–35 min",
+      agenda:[ { hora:"14:55", texto:"Llegar a Shin-Osaka, 25–30 min antes del tren" },
+               { hora:"17:46", texto:"Llegada a Shinagawa. Keikyu a Haneda Terminal 3" },
+               { hora:"18:30", texto:"Llegar a Haneda, Terminal 3. Meta entre 18:30 y 19:00" } ] }
   ],
 
   hoteles: [
@@ -266,13 +268,13 @@ const VIAJE = {
       reserva:"Opcional", prioridad:"", enlace:"https://smart-ex.jp/en/index.php", enlaceTexto:"SmartEX · OKAYAMA → KYOTO, 17 oct", doc:"" },
     { fecha:"2026-10-20", tramo:"Kyoto → Osaka", detalle:"JR Special Rapid desde Kyoto Station, unos 30 min. Pagar con IC card. Si el hotel queda en Namba, seguir en metro.",
       reserva:"Sin reserva", prioridad:"", enlace:"", enlaceTexto:"", doc:"" },
-    { fecha:"2026-10-22", tramo:"Osaka → Tokio → aeropuerto", hora:"13:00", detalle:"Nozomi desde Shin-Osaka, 2 h 30 – 2 h 45. Llegar a la estación 25–30 min antes. Meta de llegada al aeropuerto: entre 18:30 y 19:00 para el vuelo de las 22:00.",
+    { fecha:"2026-10-22", tramo:"Osaka → Tokio → aeropuerto", hora:"15:24", detalle:"Nozomi 434, Shin-Osaka 15:24 → Shinagawa 17:46, Green Car, 2 adultos, ¥38.780. Los asientos tienen espacio para maletas grandes detrás: guardarlas ahí. Llegar a la estación 25–30 min antes. Meta de llegada al aeropuerto: entre 18:30 y 19:00 para el vuelo de las 22:00.",
       segun:"aeropuertoSalida",
       opciones:{
-        "Haneda":"Salir de Shin-Osaka entre 13:00 y 14:00. Bajar en Shinagawa y tomar Keikyu hacia Haneda Terminal 3: 25–35 min más caminatas y espera.",
+        "Haneda":"Bajar en Shinagawa a las 17:46 y tomar Keikyu hacia Haneda Terminal 3: 25–35 min más caminatas y espera. Llegada al aeropuerto cerca de las 18:30.",
         "Narita":"Salir de Shin-Osaka entre 12:00 y 13:00. Bajar en Tokyo Station y tomar Narita Express con asiento reservado: cerca de 60 min más conexión. Usar el margen más conservador."
       },
-      reserva:"Comprar en SmartEX", prioridad:"Venta abierta desde el 22 de septiembre", enlace:"https://smart-ex.jp/en/index.php", enlaceTexto:"SmartEX · SHIN-OSAKA → SHINAGAWA, 22 oct", doc:"" },
+      reserva:"Comprado", prioridad:"", enlace:"https://smart-ex.jp/en/index.php", enlaceTexto:"SmartEX · SHIN-OSAKA → SHINAGAWA, 22 oct", doc:"https://drive.google.com/file/d/1PY_9CL-9KQQfIvs0N-ulHDsxqDGTDfEJ/view" },
     { fecha:"2026-10-22", tramo:"Tokio (Haneda) → Sídney", tipo:"Vuelo", hora:"22:00", detalle:"QF60, Qantas, económica. Haneda T3 22:00 → Sídney T1 el viernes 23 a las 09:55, 9 h 55 de vuelo. Embarque 21:15.",
       reserva:"Comprado", prioridad:"", enlace:"", enlaceTexto:"", doc:"https://drive.google.com/file/d/1B-bJ5NfwzBUKxTFP_uS1qQAmHlIzWDIj/view",
       docs:[ { nombre:"Pasajeros y asientos", url:"https://drive.google.com/file/d/1MjcIgWuyFgf_yEtgTsO_HUdBapdy0rzX/view" } ] },
@@ -289,10 +291,7 @@ const VIAJE = {
   ],
 
   pendientes: [
-    { id:"smartex-cuenta", texto:"Crear cuenta en SmartEX y comprobar que la tarjeta pasa 3-D Secure", cuando:"Ahora" },
     { id:"bici", texto:"Reservar bicicleta Onomichi → Setoda Port para el 15 de octubre", cuando:"Ahora" },
-    { id:"shink-1", texto:"Comprar Tokyo → Fukuyama para el 14 de octubre", cuando:"Desde el 14 de septiembre, 10:00 JST" },
-    { id:"shink-2", texto:"Comprar Shin-Osaka → Tokyo o Shinagawa para el 22 de octubre", cuando:"Desde el 22 de septiembre, 10:00 JST" },
     { id:"hoteles-dup", texto:"Resolver las reservas duplicadas de Kyoto y Osaka", cuando:"Antes de que venzan las cancelaciones gratis" },
     { id:"takkyubin", texto:"Despachar maletas grandes al hotel de Kyoto y confirmar que lo reciben", cuando:"Antes de salir de Tokio u Onomichi" },
     { id:"clima", texto:"Revisar clima para el Shimanami Kaido y la política de cancelación de la bici", cuando:"14 de octubre" },
@@ -692,7 +691,7 @@ const VIAJE = {
   }
   function panelTransporte(){
     return `<h2 class="titulo">Transporte</h2>
-      <p class="sub">Reservar solo los dos Shinkansen largos y la bicicleta. Trenes locales y ferries se compran en el momento.</p>` +
+      <p class="sub">Vuelos y los dos Shinkansen largos, comprados. Falta reservar la bicicleta. Trenes locales y ferries se compran en el momento.</p>` +
       VIAJE.transporte.map(tarjetaTramo).join("");
   }
 

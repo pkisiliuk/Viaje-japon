@@ -160,6 +160,29 @@
     background:rgba(255,255,255,.9);border:0;border-radius:3px;font:inherit;font-size:14px;
     padding:7px 11px;color:var(--ink);cursor:pointer}
 
+  /* ---------- Audios ---------- */
+  .escuchar{display:inline-block;margin-top:9px;padding:7px 12px;border:1px solid var(--sea);
+    border-radius:var(--radius);background:none;font:inherit;font-size:13.5px;color:var(--sea);cursor:pointer}
+  .escuchar.activo{background:var(--sea);color:#fff}
+  .ver-texto{background:none;border:0;font:inherit;font-size:13.5px;color:var(--sea);padding:7px 0 0 10px;cursor:pointer}
+  #reproductor{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--ink);color:#F1EEE6;
+    padding:10px 18px calc(12px + env(safe-area-inset-bottom,0px))}
+  #reproductor[hidden]{display:none}
+  #reproductor .r-wrap{max-width:var(--max);margin:0 auto}
+  #reproductor .r-titulo{background:none;border:0;padding:0;font:inherit;font-size:14.5px;color:#fff;
+    text-align:left;cursor:pointer}
+  #reproductor .r-parte{display:block;font-size:12px;color:#A9B6C9}
+  #reproductor .r-botones{display:flex;gap:8px;margin-top:8px}
+  #reproductor .r-botones button{flex:1;background:none;border:1px solid #4E607A;border-radius:var(--radius);
+    color:#F1EEE6;font:inherit;font-size:13.5px;padding:9px 4px;cursor:pointer}
+  #reproductor .r-botones .principal{background:#F1EEE6;color:var(--ink);border-color:#F1EEE6}
+  body.sonando main{padding-bottom:150px}
+  body.sonando footer{padding-bottom:150px}
+  .texto-audio p{font-size:15px;margin:0 0 10px;padding:4px 8px;border-radius:var(--radius);cursor:pointer}
+  .texto-audio p.leyendo{background:var(--paper);box-shadow:inset 3px 0 0 var(--shu)}
+  .voces select{font:inherit;font-size:14.5px;width:100%;padding:9px;margin-top:6px;
+    border:1px solid var(--line);border-radius:var(--radius);background:var(--card);color:var(--ink)}
+
   footer{max-width:var(--max);margin:0 auto;padding:22px 18px 40px;
     font-size:12.5px;color:var(--ink-2);border-top:1px solid var(--line)}
   @media (prefers-reduced-motion:no-preference){.dia.hoy{transition:none}}
@@ -319,6 +342,44 @@ const VIAJE = {
     { nombre:"Guía de transporte", url:"" }
   ],
 
+  // Audios: el teléfono lee el texto en voz alta, un párrafo a la vez.
+  // "fecha" es el día del itinerario donde aparece el botón para escuchar.
+  audios: [
+    { id:"japon", fecha:"2026-10-08", titulo:"Japón antes de aterrizar",
+      texto:[
+        "Hola. Si están escuchando esto, probablemente van en algún punto entre Santiago y Sídney, o entre Sídney y Tokio, con muchas horas por delante. Este es el primer audio del viaje. En unos nueve minutos: un poco de historia para entender lo que van a ver estas dos semanas, unas cuantas reglas que conviene saber antes de bajarse del avión, y qué esperar en Haneda a las cinco y media de la mañana.",
+        "Partamos por el mapa. Japón es un archipiélago largo y montañoso, con unos ciento veinticinco millones de personas apretadas en las pocas planicies que hay. Por eso todo está tan cerca de todo, y por eso el tren es el centro de la vida. Ustedes van a recorrer un buen pedazo: de Tokio bajan al Mar Interior, cruzan islas en bicicleta y en barco, y terminan en Kioto y Osaka.",
+        "La historia que importa para este viaje se puede contar en cuatro momentos. El primero es Kioto. En el año setecientos noventa y cuatro el emperador instaló ahí la corte, en una ciudad trazada en cuadrícula, copiando a las capitales chinas. Kioto fue la capital por más de mil años. Los templos, los jardines y esa idea de elegancia japonesa que van a ver el dieciocho y el diecinueve vienen de ahí.",
+        "El segundo momento son los samuráis. Con los siglos, el emperador quedó como una figura ceremonial y el poder real pasó a los shogunes, que eran jefes militares. Hubo más de cien años de guerras entre señores feudales, hasta que en mil seiscientos tres Tokugawa Ieyasu se quedó con todo y empezó a gobernar desde una ciudad de pantanos y pescadores llamada Edo. Esa ciudad es Tokio.",
+        "Los Tokugawa hicieron algo que explica mucho de Japón: cerraron el país. Durante más de dos siglos casi no entraban extranjeros ni salían japoneses. El comercio con Europa quedó reducido a unos pocos holandeses encerrados en una isla artificial frente a Nagasaki. Fue una paz larga, y en ese aislamiento maduraron cosas que hoy parecen eternas: el kabuki, los grabados ukiyo-e, el sushi como comida rápida de la calle, y el gusto por la forma correcta de hacer cada cosa.",
+        "El tercer momento llega en mil ochocientos cincuenta y tres, cuando aparecen frente a la bahía de Edo los barcos negros del comodoro estadounidense Matthew Perry, con cañones y una exigencia: abrir los puertos. El shogunato no se recuperó del golpe. En mil ochocientos sesenta y ocho cayó, el poder volvió al emperador Meiji, y la corte se mudó de Kioto a Edo, que pasó a llamarse Tokio: la capital del este.",
+        "Lo que siguió es una de las transformaciones más rápidas de la historia. En pocas décadas Japón importó ferrocarriles, ejército, universidades, ropa occidental y arquitectos extranjeros. El primer tren corrió en mil ochocientos setenta y dos, entre Tokio y Yokohama. El hotel donde van a dormir, el Imperial, nació en esa misma época, como la casa de huéspedes del Japón moderno. Su historia, con terremoto incluido, queda para el próximo audio.",
+        "El cuarto momento es el siglo veinte, que fue brutal: el gran terremoto de mil novecientos veintitrés, la guerra, Tokio y Osaka bombardeadas, y Hiroshima, que van a tener bastante cerca cuando anden por el Mar Interior. Después vino la reconstrucción. En mil novecientos sesenta y cuatro Tokio hizo los Juegos Olímpicos y estrenó el Shinkansen, el tren bala. Ustedes lo toman el catorce, rumbo a Fukuyama. La corte, los samuráis, la apertura y la reconstrucción conviven en cada ciudad que van a visitar.",
+        "Ahora, lo práctico. Japón tiene muchas reglas no escritas, pero nadie espera que un turista las sepa todas. Con estas cubren casi todo.",
+        "Propinas: no se dejan. En restaurantes, taxis y hoteles el servicio ya está incluido, y dejar plata en la mesa suele terminar con alguien corriendo detrás de ustedes para devolverla. Al pagar, en muchos lugares la plata o la tarjeta se deja en una bandejita junto a la caja, no en la mano.",
+        "Basura: casi no hay basureros en la calle. Los japoneses se llevan su basura a la casa, así que conviene andar con una bolsita. Los basureros que sí existen están en los konbini, las tiendas de conveniencia, y junto a las máquinas de bebidas, separados por tipo. Comer caminando tampoco está bien visto en la mayoría de los barrios: se come al lado del puesto o de la máquina, y después se sigue. La excepción son los lugares hechos para eso, como Dotonbori en Osaka.",
+        "En el metro y en los trenes se habla bajito, y no se habla por teléfono. Las filas se hacen en el andén, sobre las marcas pintadas en el suelo, y se deja bajar a todos antes de subir. En las escaleras mecánicas hay un detalle entretenido: en Tokio la gente se para a la izquierda y deja pasar por la derecha. En Osaka es al revés. Lo van a poder comprobar el veinte.",
+        "Zapatos: en templos, casas antiguas, algunos restaurantes y en los ryokan, se sacan en la entrada. La pista es un escalón o un cambio de piso. Si hay pantuflas, se usan, y si hay unas pantuflas especiales en la puerta del baño, son solo para el baño. Salir con ellas al pasillo es un error clásico.",
+        "Onsen y baños públicos: se entra sin traje de baño, hombres y mujeres por separado. Antes de meterse al agua, uno se lava completo, sentado en los pisitos de las duchas. La toalla chica no entra al agua: se deja en la cabeza o al lado. Algunos lugares no aceptan tatuajes, así que si tienen, vale la pena preguntar.",
+        "Tres palabras que sirven todo el viaje. Sumimasen: sirve para disculparse, para llamar al mesero y para abrirse paso. Arigatou gozaimasu: muchas gracias. Y onegaishimasu: por favor, cuando piden algo. Con eso, más señalar y sonreír, se llega muy lejos. En los restaurantes los van a recibir con un irasshaimase, que quiere decir bienvenidos. No hay que responder nada.",
+        "Plata: Japón ya acepta tarjeta en casi todas partes, pero siguen existiendo templos, puestos de comida y pueblos chicos donde solo hay efectivo. Los cajeros de los 7-Eleven aceptan tarjetas extranjeras y funcionan a toda hora. Para trenes, metro y hasta para las máquinas de bebidas, basta la Suica del iPhone: se acerca el teléfono al torniquete y listo.",
+        "Y ahora, la llegada. El avión aterriza en Haneda, en el Terminal 3, a las cinco y veinticinco de la mañana del sábado diez. Va a estar recién aclarando. Primero viene inmigración: si completaron Visit Japan Web, tengan a mano los códigos QR, uno por persona. Después, la aduana, y salen al hall de llegadas.",
+        "Desde ahí van a Hibiya, donde está el hotel. El Keikyu sale desde el mismo terminal, con los primeros trenes cerca de las cinco y media, y conecta en Shinagawa o en Shimbashi. Si están muy cansados, a esa hora el taxi es razonable: no hay tráfico y son unos veinte o veinticinco minutos. En el hotel todavía no van a poder entrar a la pieza, pero pueden dejar las maletas.",
+        "Un último consejo, para el desfase horario. Tokio va doce horas adelante de Chile. El primer día aguanten despiertos hasta la noche, caminen al aire libre y busquen luz de sol en la mañana. Una siesta corta está bien. Una larga les arruina la primera noche.",
+        "Eso es todo por ahora. Duerman lo que puedan. El próximo audio los espera en Tokio, y parte con una aldea de pescadores que terminó siendo la ciudad más grande del mundo."
+      ] }
+  ],
+
+  // Cómo debe leer la voz algunas palabras. Solo cambia lo que se escucha,
+  // no lo que se ve escrito.
+  pronunciacion: {
+    "Tokugawa Ieyasu":"Tokugáua Ieiásu", "Tokugawa":"Tokugáua", "Meiji":"Méiyi",
+    "Keikyu":"Keikiú", "ryokan":"riokan", "Shinkansen":"Shinkánsen", "ukiyo-e":"ukiyo e",
+    "Arigatou gozaimasu":"Arigató gosaimás", "onegaishimasu":"onegaishimás",
+    "irasshaimase":"irashaimáse", "Sumimasen":"Sumimasén", "Visit Japan Web":"Visit Yápan Güeb",
+    "7-Eleven":"Seven Eleven", "Suica":"Suika", "QR":"cu erre", "Hibiya":"Hibía", "Haneda":"Hanéda"
+  },
+
   notas: "Los horarios de barcos y ferries se reconfirman cerca de la fecha. Para bici e islas, mochila pequeña: las maletas grandes viajan por takkyubin al hotel de Kyoto."
 };
 </script>
@@ -338,6 +399,7 @@ const VIAJE = {
 <main class="wrap">
   <section id="p-hoy"></section>
   <section id="p-itinerario" hidden></section>
+  <section id="p-audios" hidden></section>
   <section id="p-hoteles" hidden></section>
   <section id="p-transporte" hidden></section>
   <section id="p-comidas" hidden></section>
@@ -347,6 +409,7 @@ const VIAJE = {
 <footer id="pie"></footer>
 
 <dialog class="hoja" id="hoja"></dialog>
+<div id="reproductor" hidden></div>
 <dialog id="visor"><button type="button" id="visor-cerrar">Cerrar</button><img alt=""></dialog>
 
 <script>
@@ -514,6 +577,180 @@ const VIAJE = {
     if (card && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); abrirFicha(card.dataset.clave); }
   });
 
+  /* ---------- Audios con la voz del teléfono ---------- */
+  // El navegador lee el texto con sus propias voces, así que funciona sin
+  // señal y sin archivos. Se lee un párrafo a la vez: pausar corta el
+  // párrafo y seguir lo repite desde el comienzo, que en iPhone es lo único
+  // confiable. Con la pantalla bloqueada el teléfono deja de leer.
+  const AUDIOS = VIAJE.audios || [];
+  const audioPorId = id => AUDIOS.find(a => a.id === id);
+  const minutosAudio = a => Math.max(1, Math.round(a.texto.join(" ").split(/\s+/).length / 150));
+
+  const Voz = (() => {
+    const s = window.speechSynthesis;
+    const reemplazos = Object.entries(VIAJE.pronunciacion || {}).sort((a,b) => b[0].length - a[0].length);
+    const decir = t => reemplazos.reduce((x,[k,v]) => x.split(k).join(v), t);
+    let actual = null, parrafo = 0, sonando = false, turno = 0;
+
+    // Voces femeninas en español que trae el iPhone, en orden de preferencia.
+    const PREFERIDAS = [/francisca/i, /paulina/i, /ang[eé]lica/i, /m[oó]nica/i, /marisol/i, /isabela/i];
+    const voces = () => s ? s.getVoices().filter(v => /^es\b|^es[-_]/i.test(v.lang)) : [];
+    const puntaje = v => {
+      const i = PREFERIDAS.findIndex(r => r.test(v.name));
+      return (i < 0 ? 0 : 20 - i) + (/mejorad|enhanced|premium/i.test(v.name) ? 30 : 0) + (/es[-_]CL/i.test(v.lang) ? 5 : 0);
+    };
+    const elegida = () => {
+      let guardada = "";
+      try { guardada = localStorage.getItem("japon-voz") || ""; } catch(e) {}
+      const vs = voces();
+      return vs.find(v => v.voiceURI === guardada) || vs.slice().sort((a,b) => puntaje(b) - puntaje(a))[0] || null;
+    };
+
+    function hablar(){
+      const t = ++turno;
+      const u = new SpeechSynthesisUtterance(decir(actual.texto[parrafo]));
+      const v = elegida();
+      if (v) { u.voice = v; u.lang = v.lang; } else u.lang = "es-CL";
+      u.onend = () => {
+        if (t !== turno) return;
+        if (parrafo < actual.texto.length - 1) { parrafo++; hablar(); }
+        else { sonando = false; parrafo = 0; pintar(); }
+      };
+      u.onerror = e => {
+        if (t !== turno || e.error === "interrupted" || e.error === "canceled") return;
+        sonando = false; pintar();
+      };
+      sonando = true;
+      s.speak(u);
+      pintar();
+    }
+    // Si ya está hablando, hay que cortar y esperar un poco antes de volver a
+    // hablar. Si no, se habla al tiro: el iPhone exige que el primer audio
+    // parta directo desde el toque.
+    function partir(){
+      if (s.speaking || s.pending) { turno++; s.cancel(); setTimeout(hablar, 120); }
+      else hablar();
+    }
+    function pausar(){ turno++; sonando = false; s.cancel(); pintar(); }
+
+    return {
+      disponible: !!s,
+      voces, elegida,
+      estado: () => ({ actual, parrafo, sonando }),
+      alternar(id){
+        if (actual && actual.id === id) return sonando ? pausar() : partir();
+        actual = audioPorId(id); parrafo = 0; partir();
+      },
+      ir(i){ if (!actual) return; parrafo = Math.max(0, Math.min(actual.texto.length - 1, i)); partir(); },
+      pausar,
+      cerrar(){ turno++; s.cancel(); actual = null; sonando = false; pintar(); }
+    };
+  })();
+
+  const repro = document.getElementById("reproductor");
+  function pintar(){
+    const { actual, parrafo, sonando } = Voz.estado();
+    document.body.classList.toggle("sonando", !!actual);
+    document.querySelectorAll("[data-audio]").forEach(b => {
+      const mio = actual && actual.id === b.dataset.audio;
+      b.classList.toggle("activo", !!mio);
+      b.textContent = (mio ? (sonando ? "Pausa · " : "Seguir · ") : "Escuchar · ") + b.dataset.nombre;
+    });
+    document.querySelectorAll(".texto-audio [data-parrafo]").forEach(p =>
+      p.classList.toggle("leyendo", !!actual && textoAbierto === actual.id && +p.dataset.parrafo === parrafo));
+    repro.hidden = !actual;
+    if (!actual) { repro.innerHTML = ""; return; }
+    repro.innerHTML = `<div class="r-wrap">
+      <button type="button" class="r-titulo" data-texto="${esc(actual.id)}">${esc(actual.titulo)}</button>
+      <span class="r-parte">Parte ${parrafo + 1} de ${actual.texto.length}${sonando ? "" : " · en pausa"} · toca el título para leer</span>
+      <div class="r-botones">
+        <button type="button" data-r="atras">‹ Anterior</button>
+        <button type="button" class="principal" data-r="play">${sonando ? "Pausa" : "Seguir"}</button>
+        <button type="button" data-r="adelante">Siguiente ›</button>
+        <button type="button" data-r="cerrar">Cerrar</button>
+      </div></div>`;
+  }
+
+  repro.addEventListener("click", e => {
+    const b = e.target.closest("[data-r]");
+    if (!b) return;
+    const { actual, parrafo } = Voz.estado();
+    if (b.dataset.r === "play") Voz.alternar(actual.id);
+    if (b.dataset.r === "atras") Voz.ir(parrafo - 1);
+    if (b.dataset.r === "adelante") Voz.ir(parrafo + 1);
+    if (b.dataset.r === "cerrar") Voz.cerrar();
+  });
+
+  // Al bloquear la pantalla el iPhone corta la voz: queda en pausa para seguir después.
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden && Voz.estado().sonando) Voz.pausar();
+  });
+
+  let textoAbierto = "";
+  function verTexto(id){
+    const a = audioPorId(id);
+    if (!a) return;
+    hoja.innerHTML = `<button type="button" class="cerrar" data-cerrar>Cerrar</button>
+      <h3>${esc(a.titulo)}</h3><p class="meta">${minutosAudio(a)} min · toca un párrafo para escuchar desde ahí</p>
+      <div class="texto-audio" style="margin-top:14px">` +
+      a.texto.map((p,i) => `<p data-parrafo="${i}">${esc(p)}</p>`).join("") + `</div>`;
+    hoja.dataset.clave = "";
+    textoAbierto = id;
+    if (!hoja.open) hoja.showModal();
+    pintar();
+  }
+  hoja.addEventListener("click", e => {
+    const p = e.target.closest(".texto-audio [data-parrafo]");
+    if (!p) return;
+    const id = textoAbierto;
+    if (!Voz.estado().actual || Voz.estado().actual.id !== id) Voz.alternar(id);
+    Voz.ir(+p.dataset.parrafo);
+  });
+  hoja.addEventListener("close", () => { textoAbierto = ""; });
+
+  const botonAudio = a => Voz.disponible
+    ? `<div><button type="button" class="escuchar" data-audio="${esc(a.id)}" data-nombre="${esc(a.titulo)} · ${minutosAudio(a)} min"></button>` +
+      `<button type="button" class="ver-texto" data-texto="${esc(a.id)}">Leer</button></div>`
+    : "";
+  const audiosDia = x => AUDIOS.filter(a => a.fecha === x.fecha).map(botonAudio).join("");
+
+  document.addEventListener("click", e => {
+    const b = e.target.closest("[data-audio]");
+    if (b) return Voz.alternar(b.dataset.audio);
+    const t = e.target.closest("[data-texto]");
+    if (t) verTexto(t.dataset.texto);
+  });
+
+  /* ---------- Panel: Audios ---------- */
+  function panelAudios(){
+    let h = `<h2 class="titulo">Audios</h2>
+      <p class="sub">Historia y datos de cada lugar, leídos por la voz del teléfono. Funcionan sin señal.</p>`;
+    if (!Voz.disponible) return h + `<div class="vacio">Este navegador no puede leer en voz alta.</div>`;
+    h += AUDIOS.map(a => `<div class="card">
+        <div class="fila"><h3>${esc(a.titulo)}</h3><span class="precio">${esc(corto(a.fecha))}</span></div>
+        ${botonAudio(a)}
+      </div>`).join("");
+    h += `<div class="voces" style="margin-top:22px"><h3 style="font-size:16px">Voz</h3>
+      <select id="voz">${opcionesVoz()}</select>
+      <p class="meta" style="margin-top:8px">El teléfono deja de leer al bloquear la pantalla: el audio queda en pausa y sigue desde el mismo párrafo.
+      Para una voz más natural, en el iPhone: Ajustes › Accesibilidad › Contenido leído › Voces › Español, y descargar una voz "Mejorada" o "Premium". Después recargar esta página.</p></div>`;
+    return h;
+  }
+  function opcionesVoz(){
+    const vs = Voz.voces(), el = Voz.elegida();
+    if (!vs.length) return `<option>Voz del sistema</option>`;
+    return vs.map(v => `<option value="${esc(v.voiceURI)}"${el && v.voiceURI === el.voiceURI ? " selected" : ""}>${esc(v.name)} (${esc(v.lang)})</option>`).join("");
+  }
+  document.addEventListener("change", e => {
+    if (e.target.id !== "voz") return;
+    try { localStorage.setItem("japon-voz", e.target.value); } catch(err) {}
+  });
+  // Las voces cargan después que la página en algunos navegadores.
+  if (Voz.disponible) window.speechSynthesis.addEventListener("voiceschanged", () => {
+    const sel = document.getElementById("voz");
+    if (sel) sel.innerHTML = opcionesVoz();
+  });
+
   /* ---------- Panel: Hoy ---------- */
   function panelHoy(){
     let h = "";
@@ -571,7 +808,7 @@ const VIAJE = {
     return `<div class="card${destacado ? " choque" : ""}" style="${destacado ? "border-left-color:var(--shu)" : ""}">
       <h3>${esc(x.plan)}</h3>
       <p class="meta">${esc(corto(x.fecha))} · ${dondeDuermen(x)}</p>
-      <p class="meta">${esc(x.como)}</p>${agendaDia(x)}</div>`;
+      <p class="meta">${esc(x.como)}</p>${agendaDia(x)}${audiosDia(x)}</div>`;
   }
 
   /* ---------- Detalle de cada día ---------- */
@@ -633,6 +870,7 @@ const VIAJE = {
             <div class="donde">${dondeDuermen(x)}</div>
             <div class="como">${esc(x.como)}</div>
             ${agendaDia(x)}
+            ${audiosDia(x)}
           </div></div>`;
       }).join("");
   }
@@ -744,6 +982,7 @@ const VIAJE = {
   const PANELES = [
     { id:"hoy",         nombre:"Hoy",         render:panelHoy },
     { id:"itinerario",  nombre:"Itinerario",  render:panelItinerario },
+    { id:"audios",      nombre:"Audios",      render:panelAudios },
     { id:"hoteles",     nombre:"Hoteles",     render:panelHoteles },
     { id:"transporte",  nombre:"Transporte",  render:panelTransporte },
     { id:"comidas",     nombre:"Restaurantes",render:panelComidas },
@@ -761,6 +1000,7 @@ const VIAJE = {
       if (activo) el.innerHTML = p.render();
     });
     contarDocs();
+    pintar();
     document.querySelectorAll("#tabs button").forEach(b =>
       b.setAttribute("aria-selected", b.dataset.p === id));
     window.scrollTo({ top:0 });

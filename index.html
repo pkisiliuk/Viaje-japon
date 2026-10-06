@@ -648,7 +648,6 @@ const VIAJE = {
       <div class="card abre${choques.has(i) ? " choque" : ""}" ${attrFicha(fichaHotel(x))}>
         <div class="fila">
           <h3>${esc(x.nombre)}</h3>
-          <span class="precio">${esc(x.precio)}</span>
         </div>
         <p class="meta">${esc(x.ciudad)} · ${esc(corto(x.entra))} al ${esc(corto(x.sale))} · ${dias(x.entra,x.sale)} ${dias(x.entra,x.sale) === 1 ? "noche" : "noches"}</p>
         <span class="tag ${choques.has(i) ? "alerta" : "ok"}">${choques.has(i) ? "Se superpone con otra reserva" : esc(x.estado)}</span>
